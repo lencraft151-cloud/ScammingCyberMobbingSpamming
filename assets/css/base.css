@@ -203,6 +203,32 @@ main { padding-block: clamp(1.5rem, 1rem + 3vw, 3rem) 4rem; }
 .badge-warn   { background: var(--warn-bg);   color: var(--warn);   border-color: color-mix(in srgb, var(--warn) 34%, transparent); }
 .badge-safe   { background: var(--safe-bg);   color: var(--safe);   border-color: color-mix(in srgb, var(--safe) 34%, transparent); }
 
+/* ---------- Auswahlkarten (Story-Übersicht) ---------- */
+.story-card {
+  display: flex; flex-direction: column; gap: .55rem;
+  text-align: left; cursor: pointer;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1rem;
+  height: 100%;
+  text-decoration: none;
+  transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
+}
+.story-card h3, .story-card p { color: inherit; }
+.story-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+.story-card .top { display: flex; align-items: center; gap: .55rem; }
+.story-card .emoji { font-size: 1.6rem; line-height: 1; flex: none; }
+.story-card h3 { margin: 0; font-size: 1.02rem; }
+.story-card p { margin: 0; font-size: .86rem; color: var(--text-dim); flex: 1; }
+.story-card .foot { display: flex; gap: .35rem; flex-wrap: wrap; align-items: center; }
+.dots { display: inline-flex; gap: 2.5px; }
+.dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--border-strong); }
+.dots i.on { background: var(--warn); }
+
 /* ---------- Anzeigebalken ---------- */
 .meter { display: grid; gap: .3rem; }
 .meter-head {
@@ -214,6 +240,7 @@ main { padding-block: clamp(1.5rem, 1rem + 3vw, 3rem) 4rem; }
   background: var(--surface-3); border: 1px solid var(--border);
 }
 .meter-fill {
+  display: block;
   height: 100%; width: 0%;
   background: var(--accent);
   border-radius: 999px;

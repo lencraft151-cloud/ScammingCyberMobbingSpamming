@@ -321,7 +321,7 @@ export function meter(labelKey, opts = {}) {
   const valueNode = el('span', { class: 'meter-value', text: opts.initial ?? '' });
   const node = el('div', { class: 'meter' },
     el('div', { class: 'meter-head' },
-      el('span', { 'data-i18n': labelKey }),
+      el('span', { 'data-i18n': labelKey, text: t(labelKey) }),
       valueNode),
     el('div', {
       class: 'meter-track', role: 'progressbar',

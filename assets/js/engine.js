@@ -211,6 +211,7 @@ export function validateStory(story, opts = {}) {
     node.choices.forEach((c, i) => {
       walk(c.text, `${nid}.choices[${i}].text`);
       walk(c.why, `${nid}.choices[${i}].why`);
+      walk(c.echo, `${nid}.choices[${i}].echo`);
       walk(c.form, `${nid}.choices[${i}].form`);
       if (!c.next) say(`${nid}.choices[${i}]: kein next`);
       else if (!nodes[c.next]) say(`${nid}.choices[${i}]: next "${c.next}" existiert nicht`);

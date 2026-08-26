@@ -1,0 +1,131 @@
+/* ============================================================
+   Modus 3 — Spam-Flut: Popup-Fenster und ihre fiesen Tricks
+   ============================================================ */
+
+.spam-hud {
+  display: grid; gap: .7rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  margin-bottom: .9rem;
+}
+.hud-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: .55rem .75rem;
+}
+.hud-box .k { font-size: .74rem; color: var(--muted); font-weight: 650; }
+.hud-box .v { font-size: 1.35rem; font-weight: 800; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.hud-box.is-danger .v { color: var(--danger); }
+
+.spam-stage {
+  position: relative;
+  height: min(70vh, 620px);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background:
+    repeating-linear-gradient(0deg, transparent 0 27px, color-mix(in srgb, var(--border) 40%, transparent) 27px 28px),
+    var(--surface);
+  overflow: hidden;
+  contain: strict;
+}
+.stage-hint {
+  position: absolute; inset: 0;
+  display: grid; place-content: center; gap: .4rem;
+  text-align: center; color: var(--muted); padding: 1.5rem;
+  pointer-events: none;
+}
+
+/* ---------- Ein einzelnes Popup ---------- */
+.pop {
+  position: absolute;
+  width: min(270px, 82%);
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: 9px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  animation: pop-in .16s cubic-bezier(.2, 1.4, .5, 1);
+}
+@keyframes pop-in { from { transform: scale(.86); opacity: 0; } }
+
+.pop-bar {
+  display: flex; align-items: center; gap: .4rem;
+  padding: .28rem .3rem .28rem .55rem;
+  background: var(--surface-3);
+  border-bottom: 1px solid var(--border);
+  font-size: .74rem; font-weight: 700;
+}
+.pop-bar .t {
+  flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pop-x {
+  flex: none; width: 20px; height: 20px;
+  display: grid; place-items: center;
+  border: 0; border-radius: 4px; cursor: pointer;
+  background: transparent; color: var(--muted);
+  font-size: .82rem; line-height: 1;
+}
+.pop-x:hover { background: var(--danger); color: #fff; }
+
+.pop-body { padding: .6rem .7rem; display: grid; gap: .45rem; }
+.pop-body .icon { font-size: 1.5rem; line-height: 1; }
+.pop-body h4 { margin: 0; font-size: .92rem; }
+.pop-body p { margin: 0; font-size: .81rem; color: var(--text-dim); }
+.pop-body .fine {
+  font-size: .64rem; color: var(--muted); line-height: 1.35;
+}
+.pop-actions { display: flex; gap: .35rem; align-items: center; flex-wrap: wrap; }
+
+.pop-btn {
+  padding: .38rem .7rem; border-radius: 6px; cursor: pointer;
+  border: 1px solid var(--border-strong); background: var(--surface);
+  color: var(--text); font-size: .8rem; font-weight: 650;
+}
+.pop-btn:hover { filter: brightness(1.15); }
+/* Der große, bunte Knopf ist immer der, den sie anklicken sollen. */
+.pop-btn.primary {
+  flex: 1; background: var(--safe); color: #052b20;
+  border-color: transparent; font-size: .86rem; padding: .48rem .8rem;
+}
+/* Und der Ablehnen-Knopf ist absichtlich winzig und grau. */
+.pop-btn.tiny {
+  font-size: .62rem; padding: .16rem .34rem;
+  color: var(--muted); background: transparent;
+  border-color: var(--border); font-weight: 500;
+}
+
+/* Varianten nach Art des Fensters */
+.pop.kind-warning .pop-bar { background: var(--danger-bg); color: var(--danger); }
+.pop.kind-warning { border-color: color-mix(in srgb, var(--danger) 50%, transparent); }
+.pop.kind-prize .pop-bar { background: var(--warn-bg); color: var(--warn); }
+.pop.kind-cookie { width: min(330px, 92%); }
+.pop.kind-update .pop-bar { background: color-mix(in srgb, var(--accent) 30%, var(--surface-3)); }
+
+/* Countdown im Fenster */
+.pop-count {
+  font-family: var(--mono); font-size: .74rem; font-weight: 800;
+  color: var(--danger);
+}
+
+/* Das X, das vor dem Zeiger wegspringt */
+.pop-x.runaway { transition: transform .1s ease; }
+
+/* Leichtes Wackeln, damit die Masse unruhig wirkt */
+.pop.jitter { animation: pop-in .16s cubic-bezier(.2,1.4,.5,1), jitter 2.6s .2s infinite ease-in-out; }
+@keyframes jitter {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(1.5px, -1px); }
+  50% { transform: translate(-1px, 1.5px); }
+  75% { transform: translate(1px, 1px); }
+}
+:root[data-motion="reduced"] .pop.jitter { animation: none; }
+@media (prefers-reduced-motion: reduce) { .pop.jitter { animation: none; } }
+
+/* ---------- Auswertung ---------- */
+.trap-list { display: grid; gap: .5rem; list-style: none; padding: 0; margin: 0; text-align: left; }
+.trap-list li {
+  padding: .6rem .8rem; border-radius: var(--radius-sm);
+  background: var(--danger-bg); border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
+  font-size: .89rem;
+}
+.trap-list b { display: block; }
+.trap-list span { color: var(--muted); font-size: .83rem; }

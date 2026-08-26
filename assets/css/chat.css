@@ -314,26 +314,3 @@
   display: flex; gap: .55rem; justify-content: center; flex-wrap: wrap;
   margin-top: 1.4rem;
 }
-
-/* ---------- Auswahlkarten (Story-Übersicht) ---------- */
-.story-card {
-  display: flex; flex-direction: column; gap: .55rem;
-  text-align: left; cursor: pointer;
-  background: var(--surface); color: var(--text);
-  border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 1rem;
-  transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
-}
-.story-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--accent);
-  box-shadow: var(--shadow-sm);
-}
-.story-card .top { display: flex; align-items: center; gap: .55rem; }
-.story-card .emoji { font-size: 1.6rem; line-height: 1; flex: none; }
-.story-card h3 { margin: 0; font-size: 1.02rem; }
-.story-card p { margin: 0; font-size: .86rem; color: var(--text-dim); flex: 1; }
-.story-card .foot { display: flex; gap: .35rem; flex-wrap: wrap; align-items: center; }
-.dots { display: inline-flex; gap: 2.5px; }
-.dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--border-strong); }
-.dots i.on { background: var(--warn); }
