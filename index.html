@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="de" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Durchschaut! — Scam, Cybermobbing & Spam zum Selberspielen</title>
+<meta name="description" content="Drei Spielmodi zu Online-Betrug, Cybermobbing im Klassenchat und Spam. Zweisprachig, ohne Tracking, direkt im Browser.">
+<meta name="color-scheme" content="dark light">
+<link rel="stylesheet" href="./assets/css/base.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='52' font-size='52'>🕵️</text></svg>">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">Zum Hauptinhalt springen</a>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="./index.html"><span class="dot" aria-hidden="true"></span>Durchschaut!</a>
+    <nav class="nav" aria-label="Hauptnavigation">
+      <a href="./index.html"       data-page="home"    data-i18n="nav.home">Start</a>
+      <a href="./scam.html"        data-page="scam"    data-i18n="nav.scam">Scam-Storys</a>
+      <a href="./klassenchat.html" data-page="chat"    data-i18n="nav.chat">Klassenchat</a>
+      <a href="./spam.html"        data-page="spam"    data-i18n="nav.spam">Spam-Flut</a>
+      <a href="./credits.html"     data-page="credits" data-i18n="nav.credits">Credits</a>
+      <button class="btn btn-icon btn-ghost" type="button" data-open-settings
+              data-i18n-attr="aria-label:nav.settings; title:nav.settings">⚙</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap stack" style="--gap:2.2rem">
+
+    <section class="stack" style="--gap:.9rem;text-align:center;padding-block:1.5rem 0">
+      <h1>Durchschaut!</h1>
+      <p style="font-size:1.12rem;color:var(--text-dim);max-width:56ch;margin-inline:auto"
+         data-i18n="home.intro">Drei Spielmodi, eine Frage: Würdest du es merken?</p>
+    </section>
+
+    <section class="stack" style="--gap:1rem">
+      <h2 data-i18n="home.modes">Wähle einen Modus</h2>
+      <div class="grid grid-modes" id="modes"></div>
+    </section>
+
+    <section class="stack" style="--gap:1rem">
+      <h2 data-i18n="home.progress">Dein Fortschritt</h2>
+      <div class="card" id="progress"></div>
+    </section>
+
+    <section>
+      <div class="note note-warn">
+        <strong data-i18n="home.disclaimerTitle">Wichtig</strong>
+        <p style="margin:.35rem 0 0" data-i18n="home.disclaimer"></p>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap bar">
+    <span>Durchschaut! — <span data-i18n="brand.tagline">Erkennst du die Masche?</span></span>
+    <span style="margin-left:auto"><a href="./credits.html" data-i18n="nav.credits">Credits</a></span>
+  </div>
+</footer>
+
+<script type="module" src="./assets/js/pages/home.js"></script>
+</body>
+</html>
