@@ -144,6 +144,28 @@ const STRINGS = {
     'spam.retry': 'Nochmal versuchen',
 
     'credits.title': 'Credits & Hilfe',
+
+    'learn.why': 'Warum das funktioniert',
+    'learn.tactic': 'Eingesetzter Hebel',
+    'learn.background': 'Hintergrund',
+    'learn.counter': 'Was dagegen hilft',
+    'learn.feels': 'Woran du es merkst',
+    'learn.how': 'So wird er angesetzt',
+    'learn.on': 'Lernmodus ist an — Erklärungen kommen direkt im Verlauf.',
+
+    'settings.learn': 'Lernmodus',
+    'settings.learnHint': 'Erklärt Maschen und Hebel schon während der Geschichte statt erst am Ende.',
+
+    'scam.tacticsTitle': 'Diese Hebel wurden gegen dich eingesetzt',
+    'scam.tacticsNone': 'In dieser Runde kam kein Hebel zum Tragen.',
+    'scam.chapter': 'Kapitel',
+
+    'nav.tactics': 'Maschen & Begriffe',
+    'tactics.title': 'Maschen & Begriffe',
+    'tactics.lead': 'Wer nur einzelne Maschen auswendig lernt, erkennt die nächste nicht. Wer die Hebel dahinter kennt, erkennt auch eine Masche, die es heute noch gar nicht gibt.',
+    'tactics.leversTitle': 'Die zwölf Hebel',
+    'tactics.glossaryTitle': 'Begriffe, die immer wieder vorkommen',
+    'tactics.rulesTitle': 'Sechs Regeln, die fast alles abdecken',
   },
 
   en: {
@@ -275,6 +297,28 @@ const STRINGS = {
     'spam.retry': 'Try again',
 
     'credits.title': 'Credits & help',
+
+    'learn.why': 'Why this works',
+    'learn.tactic': 'Technique in play',
+    'learn.background': 'Background',
+    'learn.counter': 'What defuses it',
+    'learn.feels': 'How you notice it',
+    'learn.how': 'How it is used',
+    'learn.on': 'Learning mode is on — explanations appear as you go.',
+
+    'settings.learn': 'Learning mode',
+    'settings.learnHint': 'Explains the cons and the techniques during the story rather than only at the end.',
+
+    'scam.tacticsTitle': 'The techniques used on you',
+    'scam.tacticsNone': 'No technique came into play this round.',
+    'scam.chapter': 'Chapter',
+
+    'nav.tactics': 'Cons & terms',
+    'tactics.title': 'Cons & terms',
+    'tactics.lead': 'Memorising individual cons will not help you spot the next one. Knowing the techniques behind them lets you recognise a con that does not exist yet.',
+    'tactics.leversTitle': 'The twelve techniques',
+    'tactics.glossaryTitle': 'Terms that keep coming up',
+    'tactics.rulesTitle': 'Six rules that cover almost everything',
   },
 };
 

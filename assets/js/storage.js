@@ -13,6 +13,7 @@ const DEFAULTS = {
   volume: 0.7,
   theme: 'dark',
   motion: 'full',
+  learn: true,        // Erklärungen schon während der Geschichte
   scam: {},            // storyId -> { outcome, score, plays, best }
   chat: null,          // { ending, courage, role }
   spam: null,          // { best, survived }

@@ -138,6 +138,12 @@ function buildDrawer() {
     [{ value: 'dark', key: 'theme.dark' }, { value: 'light', key: 'theme.light' }],
     store.get('theme') || 'dark', applyTheme);
 
+  const learnField = segment('settings.learn',
+    [{ value: 'on', key: 'common.on' }, { value: 'off', key: 'common.off' }],
+    store.get('learn') === false ? 'off' : 'on',
+    (v) => store.set('learn', v === 'on'));
+  learnField.append(el('span', { class: 'hint', 'data-i18n': 'settings.learnHint' }));
+
   const motionField = segment('settings.motion',
     [{ value: 'full', key: 'motion.full' }, { value: 'reduced', key: 'motion.reduced' }],
     store.get('motion') || 'full', applyMotion);
@@ -154,7 +160,7 @@ function buildDrawer() {
     }),
     el('span', { class: 'hint', 'data-i18n': 'settings.resetHint' }));
 
-  panel.append(head, langField, soundField, volField, themeField, motionField, resetField);
+  panel.append(head, langField, soundField, volField, learnField, themeField, motionField, resetField);
   document.body.append(drawer);
   applyI18n(drawer);
   return drawer;
@@ -312,6 +318,63 @@ export async function playMessages(body, messages, opts = {}) {
     onEach?.(m);
     await sleep(fast ? 60 : 260);
   }
+}
+
+/* ---------- Lernmomente ---------- */
+
+/** Ist der Lernmodus aktiv? Erklärungen erscheinen dann schon im Verlauf. */
+export function learnMode() {
+  return store.get('learn') !== false;
+}
+
+/** Benennt den psychologischen Hebel, der in dieser Szene angesetzt wird. */
+export function addTactic(body, tactic) {
+  if (!tactic) return null;
+  const node = el('div', { class: 'tactic', role: 'note' },
+    el('span', { class: 't-icon', 'aria-hidden': 'true', text: tactic.icon || '🧠' }),
+    el('div', {},
+      el('b', { class: 't-label', text: `${t('learn.tactic')}: ${L(tactic.label)}` }),
+      el('span', { class: 't-body', text: L(tactic.how) })));
+  body.append(node);
+  scrollDown(body);
+  return node;
+}
+
+/** „Warum das funktioniert" — direkt nach einer Entscheidung. */
+export function addTeach(body, text, verdict) {
+  if (!text) return null;
+  const tone = verdict === 'good' ? 'is-good' : verdict === 'bad' ? 'is-bad' : '';
+  const node = el('div', { class: `teach ${tone}`, role: 'note' },
+    el('div', { class: 'teach-head' },
+      el('span', { 'aria-hidden': 'true', text: verdict === 'good' ? '✅' : verdict === 'bad' ? '⚠️' : '💡' }),
+      el('span', { text: t('learn.why') })),
+    el('p', { text: L(text) }));
+  body.append(node);
+  scrollDown(body);
+  return node;
+}
+
+/** Hintergrundkasten: erklärt die Technik hinter der Szene. */
+export function addInfo(body, info) {
+  if (!info) return null;
+  const node = el('div', { class: 'infobox', role: 'note' },
+    el('h5', {},
+      el('span', { 'aria-hidden': 'true', text: info.icon || '🔍' }),
+      el('span', { text: L(info.title) })),
+    ...(Array.isArray(info.body) ? info.body : [info.body])
+      .filter(Boolean).map((para) => el('p', { text: L(para) })));
+  body.append(node);
+  scrollDown(body);
+  return node;
+}
+
+/** Kapitelmarke für die längeren Geschichten. */
+export function addChapter(body, label) {
+  if (!label) return null;
+  const node = el('div', { class: 'chapter', role: 'separator', text: L(label) });
+  body.append(node);
+  scrollDown(body);
+  return node;
 }
 
 /* ---------- Anzeigebalken ---------- */

@@ -191,10 +191,13 @@ export function validateStory(story, opts = {}) {
 
   const reachable = new Set();
   const known = new Set(Object.keys(story.redFlags || {}));
+  const knownTactics = new Set(opts.tactics || []);
 
   for (const [nid, node] of Object.entries(nodes)) {
     walk(node.messages, `${nid}.messages`);
     walk(node.prompt, `${nid}.prompt`);
+    walk(node.info, `${nid}.info`);
+    walk(node.chapter, `${nid}.chapter`);
     walk(node.damage, `${nid}.damage`);
     walk(node.lessons, `${nid}.lessons`);
     walk(node.recover, `${nid}.recover`);
@@ -202,6 +205,10 @@ export function validateStory(story, opts = {}) {
     (node.flags || []).forEach((f) => {
       if (!known.has(f)) say(`${nid}: unbekanntes Warnsignal "${f}"`);
     });
+    if (node.tactic && knownTactics.size && !knownTactics.has(node.tactic)) {
+      say(`${nid}: unbekannter Hebel "${node.tactic}"`);
+    }
+    if (node.info && !node.info.title) say(`${nid}: Hintergrundkasten ohne Titel`);
 
     if (isEnding(node)) {
       if (!node.outcome) say(`${nid}: Endknoten ohne outcome`);

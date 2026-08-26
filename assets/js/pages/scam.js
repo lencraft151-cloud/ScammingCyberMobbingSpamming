@@ -4,14 +4,16 @@
  */
 
 import {
-  initChrome, el, esc, toast, sleep, meter,
+  initChrome, el, toast, sleep, meter, learnMode,
   addMessage, addMailHead, playMessages, scrollDown, reducedMotion,
+  addTactic, addTeach, addInfo, addChapter,
 } from '../ui.js';
 import { t, L, lang, onLangChange } from '../i18n.js';
 import * as store from '../storage.js';
 import * as audio from '../audio.js';
 import { StoryRun } from '../engine.js';
 import stories, { storyById } from '../data/scams/index.js';
+import { TACTICS } from '../data/tactics.js';
 
 const view = document.getElementById('view');
 
@@ -138,10 +140,26 @@ async function playNode() {
   footEl.replaceChildren();
   progressMeter.set(run.progress, `${run.visited.length}`);
 
+  if (node.chapter) addChapter(bodyEl, node.chapter);
+
   await playMessages(bodyEl, node.messages || [], { signal });
   if (signal.aborted) return;
 
   if (node.page) renderFakePage(node.page);
+
+  // Im Lernmodus wird der Hebel benannt, während er wirkt — nicht erst danach.
+  if (learnMode()) {
+    if (node.tactic && TACTICS[node.tactic]) {
+      await sleep(reducedMotion() ? 40 : 260);
+      if (signal.aborted) return;
+      addTactic(bodyEl, TACTICS[node.tactic]);
+    }
+    if (node.info) {
+      await sleep(reducedMotion() ? 40 : 260);
+      if (signal.aborted) return;
+      addInfo(bodyEl, node.info);
+    }
+  }
 
   if (run.finished) {
     await sleep(reducedMotion() ? 100 : 550);
@@ -223,6 +241,12 @@ async function pick(index, choice, node) {
   await sleep(reducedMotion() ? 80 : 420);
   if (abort.signal.aborted) return;
 
+  if (learnMode() && choice.why) {
+    addTeach(bodyEl, choice.why, choice.verdict);
+    await sleep(reducedMotion() ? 80 : 900);
+    if (abort.signal.aborted) return;
+  }
+
   run.choose(index);
   playNode();
 }
@@ -286,6 +310,21 @@ function section(titleKey, ...children) {
 function renderVerdict(result, v) {
   const flagsCaught = result.flags.filter((f) => f.caught).length;
 
+  // Welche Hebel in dieser Runde tatsächlich angesetzt wurden.
+  const usedTactics = [...new Set(
+    run.visited.map((id) => currentStory.nodes[id]?.tactic).filter(Boolean))];
+  const tacticList = usedTactics.length
+    ? el('ul', { class: 'tactic-list' }, ...usedTactics.map((key) => {
+      const tac = TACTICS[key];
+      return el('li', {},
+        el('span', { class: 'ic', 'aria-hidden': 'true', text: tac.icon }),
+        el('div', {},
+          el('b', { text: L(tac.label) }),
+          el('span', { class: 'how', text: L(tac.how) }),
+          el('span', { class: 'counter', text: `↳ ${L(tac.counter)}` })));
+    }))
+    : el('p', { style: 'margin:0;color:var(--muted)', text: t('scam.tacticsNone') });
+
   const flagList = el('ul', { class: 'flaglist' },
     ...result.flags.map((f) => el('li', { class: f.caught ? 'caught' : 'missed' },
       el('span', { class: 'mark', 'aria-hidden': 'true', text: f.caught ? '✅' : '❌' }),
@@ -310,6 +349,8 @@ function renderVerdict(result, v) {
       el('p', { style: 'margin:0;color:var(--muted);font-size:.85rem',
                 text: `${flagsCaught} / ${result.flags.length} ${t('scam.flagsCaught')}` }),
       flagList),
+
+    section('scam.tacticsTitle', tacticList),
 
     result.replay.length ? section('scam.replayTitle', replayList) : null,
 

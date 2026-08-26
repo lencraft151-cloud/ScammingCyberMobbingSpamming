@@ -13,7 +13,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: min(76vh, 680px);
+  height: min(82vh, 780px);
 }
 .phone-wide { width: min(100%, 620px); }
 
@@ -313,4 +313,93 @@
 .verdict-actions {
   display: flex; gap: .55rem; justify-content: center; flex-wrap: wrap;
   margin-top: 1.4rem;
+}
+
+/* ============================================================
+   Lernmomente — Erklärungen mitten in der Geschichte
+   ============================================================ */
+
+/* Der Hebel, der gerade angesetzt wird. Sitzt im Chatverlauf, damit man
+   ihn im Moment des Wirkens sieht und nicht erst hinterher. */
+.tactic {
+  align-self: stretch;
+  display: flex; gap: .6rem; align-items: flex-start;
+  padding: .55rem .75rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface-2));
+  border: 1px dashed color-mix(in srgb, var(--accent) 45%, transparent);
+  font-size: .82rem;
+  animation: bubble-in .26s cubic-bezier(.2, .8, .3, 1);
+}
+.tactic .t-icon { font-size: 1.05rem; line-height: 1.3; flex: none; }
+.tactic .t-label {
+  display: block; font-weight: 750; color: var(--accent-2);
+  font-size: .74rem; letter-spacing: .04em; text-transform: uppercase;
+}
+.tactic .t-body { color: var(--text-dim); }
+
+/* „Warum das funktioniert" — erscheint direkt nach einer Entscheidung. */
+.teach {
+  align-self: stretch;
+  border-left: 3px solid var(--accent-2);
+  background: var(--surface-2);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: .6rem .8rem;
+  font-size: .85rem;
+  animation: bubble-in .26s cubic-bezier(.2, .8, .3, 1);
+}
+.teach.is-good { border-left-color: var(--safe); background: var(--safe-bg); }
+.teach.is-bad  { border-left-color: var(--danger); background: var(--danger-bg); }
+.teach .teach-head {
+  display: flex; align-items: center; gap: .35rem;
+  font-weight: 750; font-size: .72rem; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: .25rem;
+}
+.teach p { margin: 0; color: var(--text); }
+
+/* Hintergrundkasten: erklärt die Technik hinter einer Szene. */
+.infobox {
+  align-self: stretch;
+  background: var(--surface-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: .7rem .85rem;
+  font-size: .84rem;
+  animation: bubble-in .26s cubic-bezier(.2, .8, .3, 1);
+}
+.infobox h5 {
+  margin: 0 0 .3rem; font-size: .85rem;
+  display: flex; align-items: center; gap: .4rem;
+}
+.infobox p { margin: 0; color: var(--text-dim); }
+.infobox p + p { margin-top: .45rem; }
+
+/* Kapitelmarke für die längeren Geschichten. */
+.chapter {
+  align-self: center;
+  display: flex; align-items: center; gap: .5rem;
+  width: 100%; margin: .5rem 0 .2rem;
+  color: var(--muted); font-size: .74rem;
+  font-weight: 750; letter-spacing: .09em; text-transform: uppercase;
+}
+.chapter::before, .chapter::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* Hebel-Liste auf dem Ergebnisbildschirm. */
+.tactic-list { display: grid; gap: .5rem; list-style: none; padding: 0; margin: 0; text-align: left; }
+.tactic-list li {
+  display: flex; gap: .65rem; align-items: flex-start;
+  padding: .65rem .85rem; border-radius: var(--radius-sm);
+  background: var(--surface-2); border: 1px solid var(--border);
+  font-size: .88rem;
+}
+.tactic-list .ic { font-size: 1.15rem; line-height: 1.3; flex: none; }
+.tactic-list b { display: block; }
+.tactic-list .how { display: block; color: var(--text-dim); margin-top: .1rem; }
+.tactic-list .counter {
+  display: block; margin-top: .35rem; font-size: .83rem;
+  padding-top: .35rem; border-top: 1px dashed var(--border);
+  color: var(--safe);
 }
