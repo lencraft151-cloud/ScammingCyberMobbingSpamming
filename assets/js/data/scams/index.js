@@ -9,6 +9,7 @@ import loveScam from './06-love-scam.js';
 import gewinnspiel from './07-gewinnspiel.js';
 import krypto from './08-krypto.js';
 import nebenjob from './09-nebenjob.js';
+import tickets from './10-tickets.js';
 
 const stories = [
   paketSms,
@@ -20,6 +21,7 @@ const stories = [
   gewinnspiel,
   krypto,
   nebenjob,
+  tickets,
 ];
 
 export default stories;
