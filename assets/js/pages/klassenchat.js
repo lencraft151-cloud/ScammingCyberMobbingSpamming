@@ -7,14 +7,16 @@
  */
 
 import {
-  initChrome, el, sleep, meter, toast,
+  initChrome, el, sleep, meter, toast, learnMode,
   addMessage, playMessages, scrollDown, reducedMotion,
+  addTactic, addTeach, addInfo, addChapter,
 } from '../ui.js';
 import { t, L, onLangChange } from '../i18n.js';
 import * as store from '../storage.js';
 import * as audio from '../audio.js';
 import { StoryRun } from '../engine.js';
 import script, { pickEnding } from '../data/klassenchat.js';
+import { TACTICS } from '../data/tactics.js';
 
 const view = document.getElementById('view');
 
@@ -97,8 +99,24 @@ async function playNode() {
   const signal = abort.signal;
   footEl.replaceChildren();
 
+  if (node.chapter) addChapter(bodyEl, node.chapter);
+
   await playMessages(bodyEl, node.messages || [], { signal });
   if (signal.aborted) return;
+
+  // Im Lernmodus wird benannt, was im Chat gerade psychologisch passiert.
+  if (learnMode()) {
+    if (node.tactic && TACTICS[node.tactic]) {
+      await sleep(reducedMotion() ? 40 : 260);
+      if (signal.aborted) return;
+      addTactic(bodyEl, TACTICS[node.tactic]);
+    }
+    if (node.info) {
+      await sleep(reducedMotion() ? 40 : 260);
+      if (signal.aborted) return;
+      addInfo(bodyEl, node.info);
+    }
+  }
 
   if (run.finished) {
     await sleep(reducedMotion() ? 100 : 600);
@@ -196,7 +214,12 @@ async function afterChoice(choice) {
     if (choice.echo.from === 'me') audio.sfx.msgOut();
     scrollDown(bodyEl);
   }
-  await sleep(reducedMotion() ? 80 : 700);
+  if (learnMode() && choice?.why) {
+    await sleep(reducedMotion() ? 60 : 400);
+    if (abort.signal.aborted) return;
+    addTeach(bodyEl, choice.why, choice.verdict);
+  }
+  await sleep(reducedMotion() ? 80 : 900);
   if (abort.signal.aborted) return;
   playNode();
 }
@@ -233,6 +256,20 @@ function renderEnding(result, ending) {
   const courage = result.stats.courage || 0;
   const mia = miaPct(result.stats.mia ?? 70);
 
+  const usedTactics = [...new Set(
+    run.visited.map((id) => script.nodes[id]?.tactic).filter(Boolean))];
+  const tacticList = usedTactics.length
+    ? el('ul', { class: 'tactic-list' }, ...usedTactics.map((key) => {
+      const tac = TACTICS[key];
+      return el('li', {},
+        el('span', { class: 'ic', 'aria-hidden': 'true', text: tac.icon }),
+        el('div', {},
+          el('b', { text: L(tac.label) }),
+          el('span', { class: 'how', text: L(tac.how) }),
+          el('span', { class: 'counter', text: `↳ ${L(tac.counter)}` })));
+    }))
+    : null;
+
   const card = el('div', { class: `verdict ${TONE_CLASS[ending.tone]}` },
     el('div', { class: 'icon', 'aria-hidden': 'true', text: TONE_ICON[ending.tone] }),
     el('div', { class: 'headline', role: 'status', text: L(ending.role) }),
@@ -252,6 +289,8 @@ function renderEnding(result, ending) {
           el('span', { class: 'why', text: L(h.why) }))))),
 
     section('chat.momentsTitle', bullets(script.moments)),
+
+    tacticList ? section('scam.tacticsTitle', tacticList) : null,
 
     section('scam.flagsTitle',
       el('ul', { class: 'flaglist' },

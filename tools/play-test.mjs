@@ -97,12 +97,13 @@ const skip = (label, reason) => console.log(`– ${label} (übersprungen: ${reas
  * Klickt eine Auswahl und wartet auf den nächsten Zustand. Manche
  * Entscheidungen öffnen erst ein nachgebautes Log-in-Formular — das wird
  * ausgefüllt und abgeschickt, weil genau das der Scam-Moment ist.
- * `pick` ist 'first' oder 'last'.
+ * `pick` ist ein Index oder 'last' für die jeweils vorsichtigste Wahl.
  */
 const advance = `(async (pick) => {
   const btns = [...document.querySelectorAll('.phone-foot .choice')];
   if (!btns.length) return 'keine Auswahl';
-  (pick === 'last' ? btns[btns.length - 1] : btns[0]).click();
+  const btn = pick === 'last' ? btns[btns.length - 1] : (btns[pick] || btns[btns.length - 1]);
+  btn.click();
   for (let i = 0; i < 120; i++) {
     await new Promise(r => setTimeout(r, 120));
     if (document.querySelector('.verdict')) return 'verdict';
@@ -123,10 +124,14 @@ try {
     const p = await openPage('/scam.html#story=paket-sms');
     await p.eval("localStorage.clear()");
     await delay(2500);
-    let guard = 0;
+    // Ein fester Pfad durch paket-sms, der verlässlich im Schaden endet:
+    // Link antippen → Kartendaten eingeben → abwarten statt sperren.
+    const risky = [0, 1, 2, 0, 0, 0, 0, 0];
     let state = 'weiter';
-    // Immer die erste (riskanteste) Auswahl nehmen — das führt in den Schaden.
-    while (state === 'weiter' && guard++ < 14) state = await p.eval(`(${advance})('first')`);
+    for (const idx of risky) {
+      if (state !== 'weiter') break;
+      state = await p.eval(`(${advance})(${idx})`);
+    }
     const verdict = await p.eval("document.querySelector('.verdict')?.className || ''");
     const headline = await p.eval("document.querySelector('.verdict .headline')?.textContent || ''");
     const flags = await p.eval("document.querySelectorAll('.flaglist li').length");
@@ -153,6 +158,67 @@ try {
     check('Vorsichtiger Pfad endet sauber', /verdict-safe/.test(verdict), verdict);
     const stored = await p.eval("JSON.parse(localStorage.getItem('durchschaut.v1') || '{}').scam?.['paket-sms']?.plays || 0");
     check('Fortschritt wird gespeichert', stored >= 2, `plays=${stored}`);
+    await p.close();
+  }
+
+  /* ---------- Lernmodus ---------- */
+  {
+    const p = await openPage('/scam.html');
+    await p.eval("localStorage.setItem('durchschaut.v1', JSON.stringify({lang:'de',sound:false,learn:true}))");
+    await p.eval("location.hash = 'story=paket-sms'");
+    await delay(5000);
+    const on = await p.eval(`JSON.stringify({
+      chapter: !!document.querySelector('.chapter'),
+      tactic: !!document.querySelector('.tactic'),
+      info: !!document.querySelector('.infobox'),
+    })`);
+    const parsed = JSON.parse(on);
+    check('Lernmodus zeigt Kapitelmarke', parsed.chapter);
+    check('Lernmodus benennt den Hebel', parsed.tactic);
+    check('Lernmodus zeigt den Hintergrundkasten', parsed.info);
+
+    // Eine Entscheidung treffen: die Erklärung muss direkt danach erscheinen.
+    const teach = await p.eval(`(async () => {
+      document.querySelectorAll('.phone-foot .choice')[0]?.click();
+      for (let i = 0; i < 40; i++) {
+        await new Promise(r => setTimeout(r, 150));
+        if (document.querySelector('.teach')) return 'da';
+      }
+      return 'fehlt';
+    })()`);
+    check('Erklärung erscheint direkt nach der Wahl', teach === 'da', teach);
+
+    // Und mit abgeschaltetem Lernmodus darf nichts davon auftauchen.
+    await p.eval("localStorage.setItem('durchschaut.v1', JSON.stringify({lang:'de',sound:false,learn:false}))");
+    await p.send('Page.reload', { ignoreCache: true });
+    await delay(5000);
+    const off = await p.eval(`JSON.stringify({
+      tactic: !!document.querySelector('.tactic'),
+      info: !!document.querySelector('.infobox'),
+      teach: !!document.querySelector('.teach'),
+      messages: document.querySelectorAll('.bubble, .sys-line').length,
+    })`);
+    const o = JSON.parse(off);
+    check('Lernmodus aus blendet die Erklärungen aus', !o.tactic && !o.info && !o.teach, off);
+    check('Die Geschichte läuft trotzdem', o.messages >= 2, `${o.messages} Nachrichten`);
+    check('Lernmodus ohne Konsolenfehler', p.errors.length === 0, p.errors.join(' | '));
+    await p.shot('play-lernmodus');
+    await p.close();
+  }
+
+  /* ---------- Maschen-Seite ---------- */
+  {
+    const p = await openPage('/maschen.html');
+    const counts = await p.eval(`JSON.stringify({
+      rules: document.querySelectorAll('#rules .card').length,
+      levers: document.querySelectorAll('#levers details').length,
+      terms: document.querySelectorAll('#glossary dt').length,
+    })`);
+    const c = JSON.parse(counts);
+    check('Maschen-Seite listet die Regeln', c.rules === 6, counts);
+    check('Maschen-Seite listet alle zwölf Hebel', c.levers === 12, counts);
+    check('Maschen-Seite listet die Begriffe', c.terms >= 12, counts);
+    check('Maschen-Seite ohne Konsolenfehler', p.errors.length === 0, p.errors.join(' | '));
     await p.close();
   }
 

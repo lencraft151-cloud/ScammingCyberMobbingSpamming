@@ -388,8 +388,19 @@ function fromHash() {
   else showPicker();
 }
 
+// Auch auf Vor/Zurück und auf einen Sprung mitten in der Seite reagieren,
+// nicht nur auf das Leeren des Hash.
 window.addEventListener('hashchange', () => {
-  if (!window.location.hash) { abort?.abort(); showPicker(); }
+  const m = /story=([\w-]+)/.exec(window.location.hash);
+  const story = m && storyById(m[1]);
+  if (!story) {
+    abort?.abort();
+    showPicker();
+    return;
+  }
+  // startStory setzt den Hash selbst; ein unveränderter Hash löst kein
+  // hashchange aus, ein Neustart derselben laufenden Story also auch nicht.
+  if (story !== currentStory || run?.finished) startStory(story);
 });
 
 // Beim Sprachwechsel die aktuelle Ansicht neu aufbauen; eine laufende

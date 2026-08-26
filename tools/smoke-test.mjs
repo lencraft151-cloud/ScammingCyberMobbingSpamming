@@ -30,6 +30,7 @@ const PAGES = [
   { path: '/scam.html#story=paket-sms', name: 'scam-story', settle: 4000 },
   { path: '/klassenchat.html', name: 'klassenchat' },
   { path: '/spam.html', name: 'spam' },
+  { path: '/maschen.html', name: 'maschen' },
   { path: '/credits.html', name: 'credits' },
 ];
 

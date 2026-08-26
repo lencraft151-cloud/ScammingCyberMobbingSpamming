@@ -3,11 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Durchschaut! — Scam, Cybermobbing & Spam zum Selberspielen</title>
-<meta name="description" content="Drei Spielmodi zu Online-Betrug, Cybermobbing im Klassenchat und Spam. Zweisprachig, ohne Tracking, direkt im Browser.">
+<title>Maschen &amp; Begriffe — Durchschaut!</title>
+<meta name="description" content="Die zwoelf psychologischen Hebel hinter Online-Betrug, die wichtigsten Begriffe und sechs Regeln, die fast alles abdecken.">
 <meta name="color-scheme" content="dark light">
 <link rel="stylesheet" href="./assets/css/base.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='52' font-size='52'>🕵️</text></svg>">
+<link rel="stylesheet" href="./assets/css/chat.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='52' font-size='52'>🧠</text></svg>">
 <script>
 /* Gespeicherte Darstellung setzen, bevor die Seite gezeichnet wird. */
 try{var s=JSON.parse(localStorage.getItem('durchschaut.v1')||'{}');
@@ -36,34 +37,30 @@ if(s.lang)document.documentElement.lang=s.lang;}catch(e){}
 </header>
 
 <main id="main">
-  <div class="wrap stack" style="--gap:2.2rem">
+  <div class="wrap stack" style="--gap:2.4rem;max-width:820px">
 
-    <section class="stack" style="--gap:.9rem;text-align:center;padding-block:1.5rem 0">
-      <h1>Durchschaut!</h1>
-      <p style="font-size:1.12rem;color:var(--text-dim);max-width:56ch;margin-inline:auto"
-         data-i18n="home.intro">Drei Spielmodi, eine Frage: Würdest du es merken?</p>
+    <section class="stack" style="--gap:.7rem">
+      <h1 style="margin:0" data-i18n="tactics.title">Maschen &amp; Begriffe</h1>
+      <p style="font-size:1.06rem;color:var(--text-dim);margin:0" data-i18n="tactics.lead"></p>
     </section>
 
     <section class="stack" style="--gap:1rem">
-      <h2 data-i18n="home.modes">Wähle einen Modus</h2>
-      <div class="grid grid-modes" id="modes"></div>
+      <h2 style="margin:0" data-i18n="tactics.rulesTitle">Sechs Regeln</h2>
+      <div class="grid grid-cards" id="rules"></div>
     </section>
 
     <section class="stack" style="--gap:1rem">
-      <h2 data-i18n="home.progress">Dein Fortschritt</h2>
-      <div class="card" id="progress"></div>
+      <h2 style="margin:0" data-i18n="tactics.leversTitle">Die zwölf Hebel</h2>
+      <div id="levers" class="stack" style="--gap:.7rem"></div>
     </section>
 
-    <section>
-      <div class="note note-warn">
-        <strong data-i18n="home.disclaimerTitle">Wichtig</strong>
-        <p style="margin:.35rem 0 0" data-i18n="home.disclaimer"></p>
-      </div>
+    <section class="stack" style="--gap:1rem">
+      <h2 style="margin:0" data-i18n="tactics.glossaryTitle">Begriffe</h2>
+      <div class="card"><dl id="glossary" style="margin:0"></dl></div>
     </section>
 
   </div>
 </main>
-
 <footer class="site-footer">
   <div class="wrap bar">
     <span>Durchschaut! — <span data-i18n="brand.tagline">Erkennst du die Masche?</span></span>
@@ -71,6 +68,6 @@ if(s.lang)document.documentElement.lang=s.lang;}catch(e){}
   </div>
 </footer>
 
-<script type="module" src="./assets/js/pages/home.js"></script>
+<script type="module" src="./assets/js/pages/maschen.js"></script>
 </body>
 </html>

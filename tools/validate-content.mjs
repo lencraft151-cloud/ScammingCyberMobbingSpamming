@@ -15,7 +15,23 @@ import { validateStory } from '../assets/js/engine.js';
 import stories from '../assets/js/data/scams/index.js';
 import klassenchat, { pickEnding } from '../assets/js/data/klassenchat.js';
 import { POPUPS, DARK_PATTERNS, TIPS } from '../assets/js/data/spam.js';
+import { TACTICS, TACTIC_ORDER } from '../assets/js/data/tactics.js';
+import { GLOSSARY, RULES } from '../assets/js/data/glossary.js';
 import { readFile, readdir } from 'node:fs/promises';
+
+const TACTIC_KEYS = Object.keys(TACTICS);
+
+/** Läuft rekursiv durch ein Objekt und meldet einsprachige Felder. */
+const walkBilingual = (value, path, sink) => {
+  if (value == null || typeof value !== 'object') return;
+  const keys = Object.keys(value);
+  if (keys.includes('de') || keys.includes('en')) {
+    if (!value.de) sink.push(`${path}: deutscher Text fehlt`);
+    if (!value.en) sink.push(`${path}: englischer Text fehlt`);
+    return;
+  }
+  for (const k of keys) walkBilingual(value[k], `${path}.${k}`, sink);
+};
 
 let failures = 0;
 const report = (label, problems) => {
@@ -33,7 +49,7 @@ const report = (label, problems) => {
 console.log('Scam-Storys');
 const ids = new Set();
 for (const story of stories) {
-  const problems = validateStory(story, { minEndings: 3 });
+  const problems = validateStory(story, { minEndings: 3, tactics: TACTIC_KEYS });
   if (ids.has(story.id)) problems.push(`doppelte id "${story.id}"`);
   ids.add(story.id);
   if (!story.icon) problems.push('ohne icon');
@@ -51,18 +67,9 @@ if (stories.length !== 8) {
 console.log('\nKlassenchat');
 // Der Klassenchat hat bewusst nur einen End-Knoten: welcher Ausgang greift,
 // ergibt sich aus dem gesammelten Zivilcourage-Wert, nicht aus dem Pfad.
-const chatProblems = validateStory(klassenchat, { minEndings: 1 });
+const chatProblems = validateStory(klassenchat, { minEndings: 1, tactics: TACTIC_KEYS });
 
-const walkBi = (value, path, sink) => {
-  if (value == null || typeof value !== 'object') return;
-  const keys = Object.keys(value);
-  if (keys.includes('de') || keys.includes('en')) {
-    if (!value.de) sink.push(`${path}: deutscher Text fehlt`);
-    if (!value.en) sink.push(`${path}: englischer Text fehlt`);
-    return;
-  }
-  for (const k of keys) walkBi(value[k], `${path}.${k}`, sink);
-};
+const walkBi = walkBilingual;
 
 if (!Array.isArray(klassenchat.endings) || klassenchat.endings.length < 3) {
   chatProblems.push('weniger als 3 Ausgänge definiert');
@@ -121,6 +128,38 @@ POPUPS.forEach((p, i) => {
 DARK_PATTERNS.forEach((p, i) => bilingual(p, `DARK_PATTERNS[${i}]`));
 TIPS.forEach((p, i) => bilingual(p, `TIPS[${i}]`));
 report('  Popups & Dark Patterns', spamProblems);
+
+/* ---------- Hebel, Begriffe und Regeln ---------- */
+
+console.log('\nHebel & Begriffe');
+const learnProblems = [];
+TACTIC_KEYS.forEach((key) => {
+  const tac = TACTICS[key];
+  walkBilingual(tac, `TACTICS.${key}`, learnProblems);
+  ['label', 'how', 'feels', 'counter'].forEach((field) => {
+    if (!tac[field]) learnProblems.push(`TACTICS.${key}: ${field} fehlt`);
+  });
+  if (!tac.icon) learnProblems.push(`TACTICS.${key}: icon fehlt`);
+});
+// Die Übersichtsseite läuft über TACTIC_ORDER — dort muss jeder Hebel genau einmal stehen.
+TACTIC_KEYS.forEach((key) => {
+  if (!TACTIC_ORDER.includes(key)) learnProblems.push(`TACTIC_ORDER: "${key}" fehlt`);
+});
+TACTIC_ORDER.forEach((key) => {
+  if (!TACTICS[key]) learnProblems.push(`TACTIC_ORDER: "${key}" existiert nicht`);
+});
+if (new Set(TACTIC_ORDER).size !== TACTIC_ORDER.length) {
+  learnProblems.push('TACTIC_ORDER enthält Doppelungen');
+}
+GLOSSARY.forEach((g, i) => {
+  walkBilingual(g, `GLOSSARY[${i}]`, learnProblems);
+  if (!g.term || !g.text) learnProblems.push(`GLOSSARY[${i}]: unvollständig`);
+});
+RULES.forEach((r, i) => {
+  walkBilingual(r, `RULES[${i}]`, learnProblems);
+  if (!r.rule || !r.text) learnProblems.push(`RULES[${i}]: unvollständig`);
+});
+report(`  ${TACTIC_KEYS.length} Hebel, ${GLOSSARY.length} Begriffe, ${RULES.length} Regeln`, learnProblems);
 
 /* ---------- Oberflächentexte ---------- */
 
