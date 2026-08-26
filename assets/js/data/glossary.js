@@ -77,6 +77,51 @@ export const GLOSSARY = [
     text: bi('Alle schweigen, weil jeder glaubt, die anderen fänden es in Ordnung. Deshalb verändert eine einzige Gegenstimme so viel: Sie zeigt allen, dass sie nicht allein sind.',
              'Everybody stays quiet because each believes the others are fine with it. Which is why one dissenting voice changes so much: it shows everyone they are not alone.'),
   },
+  {
+    term: bi('Typosquatting', 'Typosquatting'),
+    text: bi('Adressen, die sich um einen Buchstaben von echten unterscheiden: paypaI.com mit großem i statt kleinem L, steamcornmunity statt steamcommunity. Bei kleiner Schrift praktisch unsichtbar.',
+             'Addresses that differ from the real one by a single character: paypaI.com with a capital i instead of a lowercase L, steamcornmunity instead of steamcommunity. At small text sizes practically invisible.'),
+  },
+  {
+    term: bi('Scareware', 'Scareware'),
+    text: bi('Software oder Popups, die ein Problem erfinden, um dir die Lösung zu verkaufen: „17 Viren gefunden", „Ihr Akku ist beschädigt". Kein Browser kann so etwas überhaupt feststellen.',
+             'Software or pop-ups that invent a problem in order to sell you the fix: “17 viruses found”, “your battery is damaged”. No browser can determine any of that in the first place.'),
+  },
+  {
+    term: bi('Abo-Falle', 'Subscription trap'),
+    text: bi('Ein Vertrag, der im Kleingedruckten oder hinter einem vorangekreuzten Kästchen versteckt ist. In Deutschland muss der Bestellknopf eindeutig beschriftet sein — sonst kommt kein wirksamer Vertrag zustande.',
+             'A contract hidden in small print or behind a pre-ticked box. German law requires an unambiguously labelled order button — without one, no valid contract is formed.'),
+  },
+  {
+    term: bi('Käuferschutz', 'Buyer protection'),
+    text: bi('Die Zusage, dein Geld zurückzubekommen, wenn die Ware nicht ankommt. Es gibt ihn bei Kreditkarte, PayPal-Warenkorb, Lastschrift und Rechnung — nicht bei Überweisung, „Freunden und Familie", Guthabenkarten oder Krypto.',
+             'The promise of getting your money back if the goods never arrive. It exists with credit cards, PayPal goods and services, direct debit and invoices — not with bank transfers, “friends and family”, gift cards or crypto.'),
+  },
+  {
+    term: bi('Datenleck', 'Data breach'),
+    text: bi('Wenn bei einem Dienst Kundendaten gestohlen werden. Deshalb wissen Betrüger oft deinen Namen, deine Adresse und die letzten Ziffern deiner Karte. Wissen ist kein Ausweis.',
+             'When customer data is stolen from a service. It is why scammers often know your name, your address and the last digits of your card. Knowledge is not identification.'),
+  },
+  {
+    term: bi('Passwortmanager', 'Password manager'),
+    text: bi('Ein Programm, das für jeden Dienst ein eigenes Passwort erzeugt und speichert. Nebeneffekt mit Schutzwirkung: Er füllt auf einer gefälschten Seite nichts aus, weil die Adresse nicht passt.',
+             'A program that generates and stores a separate password for every service. A side effect that protects you: it will not fill anything in on a fake site, because the address does not match.'),
+  },
+  {
+    term: bi('Identitätsdiebstahl', 'Identity theft'),
+    text: bi('Wenn jemand mit deinen Daten Verträge abschließt, Konten eröffnet oder bestellt. Ein Ausweisfoto plus Geburtsdatum plus Anschrift reicht dafür oft schon aus.',
+             'When somebody uses your details to sign contracts, open accounts or place orders. A photo of your ID plus date of birth plus address is often enough.'),
+  },
+  {
+    term: bi('Sperr-Notruf 116 116', 'Card blocking hotline'),
+    text: bi('Die kostenlose Nummer, unter der sich Bankkarten, Kreditkarten und der Online-Ausweis rund um die Uhr sperren lassen. Aus dem Ausland: +49 116 116.',
+             'In Germany, the free round-the-clock number for blocking bank cards, credit cards and the electronic ID. From abroad: +49 116 116. In the UK, call the number on the back of your card.'),
+  },
+  {
+    term: bi('Catfishing', 'Catfishing'),
+    text: bi('Eine erfundene Identität mit geklauten Fotos, oft über Monate gepflegt. Nicht jedes Catfishing zielt auf Geld — beim Romance-Scam schon.',
+             'A fabricated identity built on stolen photos, often maintained for months. Not all catfishing is after money — in a romance scam it is.'),
+  },
 ];
 
 /** Die kurze Fassung: Regeln, die fast alle Maschen auf dieser Seite abdecken. */
@@ -110,5 +155,42 @@ export const RULES = [
     rule: bi('Erzähl es jemandem.', 'Tell somebody.'),
     text: bi('Jede Bitte um Geheimhaltung ist selbst das Erkennungszeichen. Und hinterher ist Reden der einzige Schritt, der etwas zurückholt — Scham hält diese Maschen am Laufen, nicht ihre Raffinesse.',
              'Every request for secrecy is itself the tell. And afterwards, talking is the only step that recovers anything — shame keeps these cons running, not their sophistication.'),
+  },
+];
+
+/**
+ * Die Zwei-Minuten-Prüfung: sechs Fragen, die man jeder verdächtigen
+ * Nachricht stellen kann, egal um welche Masche es geht.
+ */
+export const CHECKLIST = [
+  {
+    q: bi('Wer schreibt hier wirklich?', 'Who is actually writing?'),
+    a: bi('Nicht den Anzeigenamen lesen, sondern das, was dahinter steht: die Adresse hinter dem @, die Nummer, die Domain vor dem ersten einzelnen Schrägstrich. Der Name davor ist frei erfindbar.',
+          'Do not read the display name, read what is behind it: the address after the @, the number, the domain before the first single slash. The name in front can be invented freely.'),
+  },
+  {
+    q: bi('Habe ich das erwartet?', 'Was I expecting this?'),
+    a: bi('Kein Paket bestellt, kein Gewinnspiel mitgemacht, keinen Support angerufen, kein Konto bei dieser Bank. Eine unerwartete Nachricht ist noch kein Betrug — aber sie verdient die volle Prüfung.',
+          'No parcel ordered, no competition entered, no support line called, no account at that bank. An unexpected message is not proof of fraud — but it earns the full check.'),
+  },
+  {
+    q: bi('Was gebe ich her, wenn ich mitmache?', 'What am I handing over if I go along?'),
+    a: bi('Nicht auf den Betrag schauen, sondern auf die Daten: Kartennummer mit Prüfziffer, Passwort, Bestätigungscode, Ausweisfoto, Kontonummer. Der Betrag ist oft nur die Ablenkung.',
+          'Look past the amount and at the data: card number with security code, password, confirmation code, ID photo, bank details. The amount is often just the misdirection.'),
+  },
+  {
+    q: bi('Warum soll das jetzt sofort passieren?', 'Why does this have to happen right now?'),
+    a: bi('Echte Fristen halten eine Nacht aus. Wenn Eile das stärkste Argument ist, ist Eile das Argument gegen die Sache.',
+          'Real deadlines survive a night’s sleep. When hurry is the strongest argument, hurry is the argument against it.'),
+  },
+  {
+    q: bi('Was passiert, wenn ich einfach nichts tue?', 'What happens if I simply do nothing?'),
+    a: bi('Bei echten Anliegen: nichts Schlimmes, man kann später zurückrufen. Bei einer Masche: Sie verschwindet. Nichtstun ist die günstigste Prüfung, die es gibt.',
+          'With a genuine matter: nothing bad, you can call back later. With a con: it disappears. Doing nothing is the cheapest test there is.'),
+  },
+  {
+    q: bi('Wen kann ich fragen?', 'Who can I ask?'),
+    a: bi('Eine zweite Person sieht in zwei Minuten, was man selbst nach zwei Stunden nicht sieht. Und wenn die Nachricht ausdrücklich verlangt, niemanden zu fragen, ist die Prüfung damit schon abgeschlossen.',
+          'A second person spots in two minutes what you cannot see in two hours. And if the message explicitly demands that you ask nobody, the check is already complete.'),
   },
 ];

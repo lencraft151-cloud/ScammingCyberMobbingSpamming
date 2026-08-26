@@ -12,7 +12,7 @@ import * as store from '../storage.js';
 import * as audio from '../audio.js';
 import stories from '../data/scams/index.js';
 import { TACTICS, TACTIC_ORDER } from '../data/tactics.js';
-import { GLOSSARY } from '../data/glossary.js';
+import { GLOSSARY, CHECKLIST } from '../data/glossary.js';
 
 const stage = document.getElementById('rollStage');
 const track = document.getElementById('rollTrack');
@@ -104,6 +104,7 @@ function buildRoll() {
     block(
       role(t2('Begriffe erklärt', 'Terms explained')),
       line(`${GLOSSARY.length} ${t2('Begriffe von Smishing bis Money Mule', 'terms from smishing to money mule')}`),
+      line(`${CHECKLIST.length} ${t2('Fragen für die Zwei-Minuten-Prüfung', 'questions for the two-minute check')}`),
       note(t2('Nachzulesen unter „Maschen & Begriffe".', 'All listed under “Cons & terms”.'))),
 
     block(el('hr', { class: 'roll-rule' })),

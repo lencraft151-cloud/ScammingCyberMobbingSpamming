@@ -362,3 +362,27 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
   animation-iteration-count: 1 !important;
   transition-duration: .001ms !important;
 }
+
+/* ---------- Prüfliste (Maschen-Seite) ---------- */
+.check-list {
+  list-style: none; counter-reset: chk;
+  padding: 0; margin: 0; display: grid; gap: .6rem;
+}
+.check-list li {
+  counter-increment: chk;
+  display: grid; grid-template-columns: auto 1fr; gap: .2rem .85rem;
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-2);
+  border-radius: var(--radius-sm); padding: .8rem 1rem;
+}
+.check-list li::before {
+  content: counter(chk);
+  grid-row: span 2;
+  width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--surface-3); border: 1px solid var(--border);
+  font-family: var(--mono); font-weight: 800; font-size: .8rem;
+  color: var(--accent-2);
+}
+.check-list .q { font-weight: 700; font-size: .98rem; }
+.check-list .a { font-size: .89rem; color: var(--text-dim); }

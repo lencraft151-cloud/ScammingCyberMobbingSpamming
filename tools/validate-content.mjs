@@ -16,7 +16,7 @@ import stories from '../assets/js/data/scams/index.js';
 import klassenchat, { pickEnding } from '../assets/js/data/klassenchat.js';
 import { POPUPS, DARK_PATTERNS, TIPS } from '../assets/js/data/spam.js';
 import { TACTICS, TACTIC_ORDER } from '../assets/js/data/tactics.js';
-import { GLOSSARY, RULES } from '../assets/js/data/glossary.js';
+import { GLOSSARY, RULES, CHECKLIST } from '../assets/js/data/glossary.js';
 import { readFile, readdir } from 'node:fs/promises';
 
 const TACTIC_KEYS = Object.keys(TACTICS);
@@ -161,7 +161,11 @@ RULES.forEach((r, i) => {
   walkBilingual(r, `RULES[${i}]`, learnProblems);
   if (!r.rule || !r.text) learnProblems.push(`RULES[${i}]: unvollständig`);
 });
-report(`  ${TACTIC_KEYS.length} Hebel, ${GLOSSARY.length} Begriffe, ${RULES.length} Regeln`, learnProblems);
+CHECKLIST.forEach((c, i) => {
+  walkBilingual(c, `CHECKLIST[${i}]`, learnProblems);
+  if (!c.q || !c.a) learnProblems.push(`CHECKLIST[${i}]: unvollständig`);
+});
+report(`  ${TACTIC_KEYS.length} Hebel, ${GLOSSARY.length} Begriffe, ${RULES.length} Regeln, ${CHECKLIST.length} Prüffragen`, learnProblems);
 
 /* ---------- Oberflächentexte ---------- */
 

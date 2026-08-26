@@ -3,7 +3,7 @@
 import { initChrome, el } from '../ui.js';
 import { t, L, onLangChange } from '../i18n.js';
 import { TACTICS, TACTIC_ORDER } from '../data/tactics.js';
-import { GLOSSARY, RULES } from '../data/glossary.js';
+import { GLOSSARY, RULES, CHECKLIST } from '../data/glossary.js';
 
 function renderRules() {
   document.getElementById('rules').replaceChildren(...RULES.map((r, i) => el('div', { class: 'card' },
@@ -14,6 +14,12 @@ function renderRules() {
       }),
       el('b', { style: 'font-size:1rem', text: L(r.rule) })),
     el('p', { style: 'margin:0;font-size:.89rem;color:var(--text-dim)', text: L(r.text) }))));
+}
+
+function renderChecklist() {
+  document.getElementById('checklist').replaceChildren(...CHECKLIST.map((c) => el('li', {},
+    el('span', { class: 'q', text: L(c.q) }),
+    el('span', { class: 'a', text: L(c.a) }))));
 }
 
 function renderLevers() {
@@ -54,6 +60,7 @@ function renderGlossary() {
 
 function draw() {
   renderRules();
+  renderChecklist();
   renderLevers();
   renderGlossary();
 }

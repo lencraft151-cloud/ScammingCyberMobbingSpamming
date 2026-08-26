@@ -213,11 +213,21 @@ try {
       rules: document.querySelectorAll('#rules .card').length,
       levers: document.querySelectorAll('#levers details').length,
       terms: document.querySelectorAll('#glossary dt').length,
+      checks: document.querySelectorAll('#checklist li').length,
     })`);
     const c = JSON.parse(counts);
     check('Maschen-Seite listet die Regeln', c.rules === 6, counts);
     check('Maschen-Seite listet alle zwölf Hebel', c.levers === 12, counts);
-    check('Maschen-Seite listet die Begriffe', c.terms >= 12, counts);
+    check('Maschen-Seite listet die Begriffe', c.terms >= 20, counts);
+    check('Maschen-Seite zeigt die Zwei-Minuten-Prüfung', c.checks === 6, counts);
+    // Ein Hebel muss sich aufklappen lassen, sonst ist der Inhalt unerreichbar.
+    const opened = await p.eval(`(async () => {
+      const d = document.querySelector('#levers details');
+      d.open = true;
+      await new Promise(r => setTimeout(r, 120));
+      return d.querySelectorAll('p').length;
+    })()`);
+    check('Ein Hebel lässt sich aufklappen', opened >= 3, `${opened} Absätze`);
     check('Maschen-Seite ohne Konsolenfehler', p.errors.length === 0, p.errors.join(' | '));
     await p.close();
   }

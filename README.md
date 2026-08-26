@@ -14,14 +14,18 @@ A bilingual (German/English) learning game about **scams**, **cyberbullying** an
 
 | Modus | Was passiert |
 |-------|--------------|
-| 🎣 **Scam-Storys** | Acht verzweigte Geschichten aus SMS, WhatsApp, Instagram, Discord, E-Mail und am Telefon — 118 Szenen, jede mit einer echten Ausgangslage und mehreren Enden. Am Ende steht klar da, ob du gescammt wurdest: mit Schadenshöhe, allen Warnsignalen, die in den Nachrichten steckten, einem Rückblick auf jede Entscheidung und den Hebeln, die gegen dich eingesetzt wurden. |
+| 🎣 **Scam-Storys** | Acht verzweigte Geschichten aus SMS, WhatsApp, Instagram, Discord, E-Mail und am Telefon — zehn Geschichten mit über 160 Szenen, jede mit einer echten Ausgangslage und mehreren Enden. Am Ende steht klar da, ob du gescammt wurdest: mit Schadenshöhe, allen Warnsignalen, die in den Nachrichten steckten, einem Rückblick auf jede Entscheidung und den Hebeln, die gegen dich eingesetzt wurden. |
 | 💬 **Cybermobbing im Klassenchat** | Ein Gruppenchat kippt gegen eine Mitschülerin. Nachrichten laufen in Echtzeit ein, Entscheidungen stehen unter Zeitdruck. Läuft die Zeit ab, zählt das als Schweigen — und Schweigen wird am Ende auch so benannt. |
-| 🧠 **Maschen & Begriffe** | Die zwölf psychologischen Hebel hinter allen Maschen, fünfzehn Begriffe von Smishing bis Money Mule und sechs Regeln, die fast alles abdecken. |
-| 🌊 **Spam-Flut** | 90 Sekunden Popup-Dauerbeschuss mit echten Dark Patterns: falsche Schließkreuze, flüchtende X, Hydra-Fenster, winzige Ablehnen-Knöpfe. Danach wird jeder Trick erklärt, der gezogen hat. |
+| 🧠 **Maschen & Begriffe** | Die zwölf psychologischen Hebel hinter allen Maschen, die Zwei-Minuten-Prüfung mit sechs Fragen für jede verdächtige Nachricht, 24 Begriffe von Smishing bis Catfishing und sechs Regeln, die fast alles abdecken. |
+| 🌊 **Spam-Flut** | 90 Sekunden Dauerbeschuss mit dreizehn Fenstertypen und zehn echten Dark Patterns: falsche Schließkreuze, flüchtende X, Hydra-Fenster, vertauschte Knöpfe, getarnte Systemmeldungen, Fenster, die wiederkommen. Danach wird jeder Trick erklärt, der gezogen hat. |
 
 Dazu: acht Scam-Szenarien decken bewusst beide Zielgruppen ab — Jugendliche
 (Gaming-Skins, Fake-Shop, Klassenchat) und Erwachsene (Bank-Support, Enkeltrick,
 Krypto-Anlagebetrug).
+
+Dazu ein **Abspann**, der wie im Kino durchläuft — mit Pause, vier Geschwindigkeiten
+und einer ruhigen Listenfassung. Sein Inhalt kommt aus den Datendateien, er nennt
+also immer genau die Storys und Hebel, die es wirklich gibt.
 
 ## Der Lernmodus
 

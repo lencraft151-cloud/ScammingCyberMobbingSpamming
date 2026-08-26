@@ -174,6 +174,8 @@ const STRINGS = {
     'tactics.leversTitle': 'Die zwölf Hebel',
     'tactics.glossaryTitle': 'Begriffe, die immer wieder vorkommen',
     'tactics.rulesTitle': 'Sechs Regeln, die fast alles abdecken',
+    'tactics.checkTitle': 'Die Zwei-Minuten-Prüfung',
+    'tactics.checkLead': 'Sechs Fragen, die zu jeder verdächtigen Nachricht passen — egal, welche Masche dahintersteckt.',
   },
 
   en: {
@@ -335,6 +337,8 @@ const STRINGS = {
     'tactics.leversTitle': 'The twelve techniques',
     'tactics.glossaryTitle': 'Terms that keep coming up',
     'tactics.rulesTitle': 'Six rules that cover almost everything',
+    'tactics.checkTitle': 'The two-minute check',
+    'tactics.checkLead': 'Six questions that fit any suspicious message — whichever con is behind it.',
   },
 };
 
