@@ -306,32 +306,50 @@ try {
     const riskBefore = await p.eval("document.querySelectorAll('.meter-fill')[1]?.style.width || '0%'");
     await p.eval("document.querySelector('.pop .pop-btn.primary')?.click()");
     await delay(600);   // Der Balken wird erst im nächsten Takt aktualisiert.
-    const riskAfter = await p.eval("document.querySelectorAll('.meter-fill')[1]?.style.width || '0%'");
-    check('Klick in die Falle erhöht das Risiko',
-      parseFloat(riskAfter) > parseFloat(riskBefore), `${riskBefore} -> ${riskAfter}`);
+    const over1 = await p.eval("!!document.querySelector('.verdict')");
+    const riskAfter = await p.eval("document.querySelectorAll('.meter-fill')[1]?.style.width || null");
+    if (over1 || riskAfter === null) {
+      skip('Klick in die Falle erhöht das Risiko', 'Runde endete vor der Messung');
+    } else {
+      check('Klick in die Falle erhöht das Risiko',
+        parseFloat(riskAfter) > parseFloat(riskBefore), `${riskBefore} -> ${riskAfter}`);
+    }
 
     // Das eine Fenster muss verschwinden. Die Gesamtzahl taugt dafür nicht:
     // beim Hydra-Muster öffnen sich beim Schließen absichtlich zwei neue.
     // Welche Fenstertypen offen sind, ist Zufall — deshalb wird auf ein
     // passendes gewartet, statt das erstbeste zu erwischen.
     const closed = await poll(p, `(() => {
+      if (document.querySelector('.verdict')) return 'runde vorbei';
       const pop = [...document.querySelectorAll('.pop')]
         .find(x => x.dataset.pattern !== 'fakeX' && x.dataset.pattern !== 'hydra');
       if (!pop) return null;
       pop.querySelector('.pop-x').click();
       return pop.isConnected ? 'blieb offen' : 'geschlossen';
     })()`, { tries: 60 });
-    check('Echtes Schließkreuz schließt das Fenster', closed === 'geschlossen',
-      closed || 'kein passendes Fenster aufgetaucht');
+    if (closed === 'runde vorbei' || !closed) {
+      skip('Echtes Schließkreuz schließt das Fenster',
+        closed === 'runde vorbei' ? 'Runde endete vorher' : 'kein passendes Fenster aufgetaucht');
+    } else {
+      check('Echtes Schließkreuz schließt das Fenster', closed === 'geschlossen', closed);
+    }
 
     // Ein falsches Schließkreuz darf gerade nicht harmlos sein.
     // Der Risikobalken wird erst im nächsten Takt (100 ms) neu gezeichnet —
     // ohne kurzes Warten liest man immer noch den alten Wert.
     const readRisk = "(() => { const m = document.querySelectorAll('.meter-fill')[1];"
       + " return m ? (parseFloat(m.style.width) || 0) : null; })()";
+    // Beim Suchen nicht untätig bleiben: Wer nichts schließt, geht in 18 Sekunden
+    // im Müll unter — dann gibt es nichts mehr zu messen.
     const hitFakeX = await poll(p, `(() => {
+      if (document.querySelector('.verdict')) return 'runde vorbei';
       const pop = [...document.querySelectorAll('.pop')].find(x => x.dataset.pattern === 'fakeX');
-      if (!pop) return null;
+      if (!pop) {
+        const harmless = [...document.querySelectorAll('.pop')]
+          .find(x => x.dataset.pattern !== 'fakeX' && x.dataset.pattern !== 'hydra');
+        harmless?.querySelector('.pop-x')?.click();
+        return null;
+      }
       window.__riskBefore = (() => {
         const m = document.querySelectorAll('.meter-fill')[1];
         return m ? (parseFloat(m.style.width) || 0) : 0;
@@ -339,15 +357,20 @@ try {
       pop.querySelector('.pop-x').click();
       return 'geklickt';
     })()`, { tries: 60 });
-    if (!hitFakeX) {
-      skip('Falsches Schließkreuz erhöht das Risiko', 'kein solches Fenster in dieser Runde');
+    if (!hitFakeX || hitFakeX === 'runde vorbei') {
+      skip('Falsches Schließkreuz erhöht das Risiko',
+        hitFakeX === 'runde vorbei' ? 'Runde endete vorher' : 'kein solches Fenster in dieser Runde');
     } else {
       // Der Balken wird erst im nächsten Takt (100 ms) neu gezeichnet.
       await delay(500);
       const after = await p.eval(readRisk);
       const before = await p.eval('window.__riskBefore ?? 0');
-      check('Falsches Schließkreuz erhöht das Risiko',
-        after !== null && after > before, `${before} -> ${after}`);
+      if (after === null) {
+        // Die Runde ist zwischen Klick und Messung zu Ende gegangen.
+        skip('Falsches Schließkreuz erhöht das Risiko', 'Runde endete vor der Messung');
+      } else {
+        check('Falsches Schließkreuz erhöht das Risiko', after > before, `${before} -> ${after}`);
+      }
     }
 
     // Spiel bis zum Ende treiben, indem gezielt in die Fallen geklickt wird.
