@@ -44,6 +44,7 @@ function pairs(rows) {
 
 function buildRoll() {
   const t2 = de;
+  const scenes = stories.reduce((n, st) => n + Object.keys(st.nodes).length, 0);
   return [
     block(
       el('h2', { class: 'roll-title', text: 'Durchschaut!' }),
@@ -56,13 +57,14 @@ function buildRoll() {
     block(
       role(t2('Drei Spielmodi', 'Three game modes')),
       pairs([
-        [t2('Scam-Storys', 'Scam stories'), t2('acht Geschichten, 118 Szenen', 'eight stories, 118 scenes')],
+        [t2('Scam-Storys', 'Scam stories'),
+         t2(`${stories.length} Geschichten, ${scenes} Szenen`, `${stories.length} stories, ${scenes} scenes`)],
         [t2('Klassenchat', 'Class chat'), t2('Cybermobbing in Echtzeit', 'cyberbullying in real time')],
         [t2('Spam-Flut', 'Spam flood'), t2('90 Sekunden Dauerbeschuss', '90 seconds of bombardment')],
       ])),
 
     block(
-      role(t2('Die acht Maschen', 'The eight cons')),
+      role(t2('Die Maschen', 'The cons')),
       el('ul', { class: 'roll-list' },
         ...stories.map((s) => el('li', { text: `${s.icon}  ${L(s.title)}` })))),
 

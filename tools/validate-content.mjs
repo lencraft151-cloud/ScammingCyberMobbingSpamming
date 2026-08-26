@@ -57,10 +57,12 @@ for (const story of stories) {
   if (!story.difficulty) problems.push('ohne difficulty');
   report(`  ${story.id}`, problems);
 }
-if (stories.length !== 8) {
+if (stories.length < 8) {
   failures += 1;
-  console.error(`\n✗ erwartet 8 Storys, gefunden ${stories.length}`);
+  console.error(`\n✗ erwartet mindestens 8 Storys, gefunden ${stories.length}`);
 }
+const sceneCount = stories.reduce((n, s) => n + Object.keys(s.nodes).length, 0);
+console.log(`  ${stories.length} Storys, ${sceneCount} Szenen`);
 
 /* ---------- Klassenchat ---------- */
 

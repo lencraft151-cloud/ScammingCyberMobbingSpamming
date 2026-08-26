@@ -8,6 +8,7 @@ import bankSupport from './05-bank-support.js';
 import loveScam from './06-love-scam.js';
 import gewinnspiel from './07-gewinnspiel.js';
 import krypto from './08-krypto.js';
+import nebenjob from './09-nebenjob.js';
 
 const stories = [
   paketSms,
@@ -18,6 +19,7 @@ const stories = [
   loveScam,
   gewinnspiel,
   krypto,
+  nebenjob,
 ];
 
 export default stories;

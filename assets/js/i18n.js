@@ -67,13 +67,13 @@ const STRINGS = {
     'home.disclaimer': 'Diese Seite ist eine Übung. Alle Namen, Nummern, Firmen und Nachrichten sind frei erfunden. Es werden keine Daten gesendet oder gespeichert — außer deinem Fortschritt, der nur in diesem Browser bleibt.',
 
     'mode.scam.title': 'Scam-Storys',
-    'mode.scam.desc': 'Acht Geschichten aus SMS, WhatsApp, Insta und Mail. Du entscheidest — am Ende erfährst du, ob du gescammt wurdest.',
+    'mode.scam.desc': 'Verzweigte Geschichten aus SMS, WhatsApp, Insta, Discord und Mail. Du entscheidest — am Ende erfährst du, ob du gescammt wurdest.',
     'mode.chat.title': 'Cybermobbing im Klassenchat',
     'mode.chat.desc': 'Ein Gruppenchat kippt. Du siehst alles mit. Was tust du — und was passiert, wenn du nichts tust?',
     'mode.spam.title': 'Spam-Flut',
     'mode.spam.desc': 'Popups, Fake-Warnungen, Cookie-Fallen. Halte 90 Sekunden durch, ohne auf die Tricks hereinzufallen.',
 
-    'scam.lead': 'Acht echte Maschen, nachgebaut. Wähle eine Geschichte.',
+    'scam.lead': 'Echte Maschen, nachgebaut. Wähle eine Geschichte.',
     'scam.difficulty': 'Schwierigkeit',
     'scam.notPlayed': 'ungespielt',
     'scam.bestSafe': 'sauber überstanden',
@@ -98,7 +98,7 @@ const STRINGS = {
     'scam.lessonsTitle': 'Merk dir das',
     'scam.whatNowTitle': 'Wenn es dich wirklich erwischt hat',
     'scam.nextStory': 'Nächste Story',
-    'scam.allDone': 'Du hast alle acht Storys gespielt. Respekt.',
+    'scam.allDone': 'Du hast alle Storys gespielt. Respekt.',
 
     'chat.warnTitle': 'Kurzer Hinweis',
     'chat.warnBody': 'In diesem Modus geht es um Mobbing in einem Klassenchat. Die Nachrichten sind erfunden, können aber unangenehm sein. Wenn dich das Thema gerade selbst betrifft: Du bist nicht allein, und weiter unten stehen Nummern, bei denen dir jemand zuhört.',
@@ -228,13 +228,13 @@ const STRINGS = {
     'home.disclaimer': 'This site is a drill. Every name, number, company and message is made up. Nothing is sent or stored anywhere — except your progress, which never leaves this browser.',
 
     'mode.scam.title': 'Scam stories',
-    'mode.scam.desc': 'Eight stories from SMS, WhatsApp, Instagram and email. You choose — and at the end you find out whether you got scammed.',
+    'mode.scam.desc': 'Branching stories from SMS, WhatsApp, Instagram, Discord and email. You choose — and at the end you find out whether you got scammed.',
     'mode.chat.title': 'Cyberbullying in the class chat',
     'mode.chat.desc': 'A group chat turns nasty. You see all of it. What do you do — and what happens if you do nothing?',
     'mode.spam.title': 'Spam flood',
     'mode.spam.desc': 'Pop-ups, fake warnings, cookie traps. Survive 90 seconds without falling for the tricks.',
 
-    'scam.lead': 'Eight real-world cons, rebuilt. Pick a story.',
+    'scam.lead': 'Real-world cons, rebuilt. Pick a story.',
     'scam.difficulty': 'Difficulty',
     'scam.notPlayed': 'unplayed',
     'scam.bestSafe': 'came out clean',
@@ -259,7 +259,7 @@ const STRINGS = {
     'scam.lessonsTitle': 'Remember this',
     'scam.whatNowTitle': 'If it really happens to you',
     'scam.nextStory': 'Next story',
-    'scam.allDone': 'You have played all eight stories. Respect.',
+    'scam.allDone': 'You have played every story. Respect.',
 
     'chat.warnTitle': 'Quick heads-up',
     'chat.warnBody': 'This mode is about bullying in a class group chat. The messages are invented, but they can be uncomfortable to read. If this is something you are going through right now: you are not alone, and there are numbers below where someone will listen.',
