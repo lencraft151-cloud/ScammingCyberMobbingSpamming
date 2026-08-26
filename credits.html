@@ -7,6 +7,7 @@
 <meta name="description" content="Woher die Inhalte kommen, wie der Ton entsteht, wo es echte Hilfe gibt - und unter welcher Lizenz das Projekt steht.">
 <meta name="color-scheme" content="dark light">
 <link rel="stylesheet" href="./assets/css/base.css">
+<link rel="stylesheet" href="./assets/css/credits.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='52' font-size='52'>🕵️</text></svg>">
 <script>
 /* Gespeicherte Darstellung setzen, bevor die Seite gezeichnet wird. */
@@ -39,6 +40,19 @@ if(s.lang)document.documentElement.lang=s.lang;}catch(e){}
 <div class="wrap stack" style="--gap:2rem;max-width:760px">
 
   <h1 data-i18n="credits.title">Credits &amp; Hilfe</h1>
+
+  <!-- ---------- Abspann ---------- -->
+  <section class="stack" style="--gap:.55rem">
+    <div class="roll-stage" id="rollStage" role="region"
+         data-i18n-attr="aria-label:credits.rollLabel">
+      <div class="roll-track" id="rollTrack"></div>
+    </div>
+    <div class="roll-progress"><span id="rollBar"></span></div>
+    <div class="roll-controls" id="rollControls"></div>
+    <p style="margin:0;font-size:.8rem;color:var(--muted)" data-i18n="credits.rollHint"></p>
+  </section>
+
+  <h2 style="margin:1rem 0 0" data-i18n="credits.readAll">Alles zum Nachlesen</h2>
 
   <!-- ---------- Worum es geht ---------- -->
   <section class="card">

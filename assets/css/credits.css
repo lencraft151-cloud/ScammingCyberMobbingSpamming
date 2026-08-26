@@ -1,0 +1,129 @@
+/* ============================================================
+   Abspann — läuft wie im Kino von unten nach oben durch
+   ============================================================ */
+
+.roll-stage {
+  position: relative;
+  height: min(72vh, 700px);
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-strong);
+  background:
+    radial-gradient(120% 90% at 50% 110%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 62%),
+    #05060b;
+  box-shadow: inset 0 0 90px rgba(0, 0, 0, .75);
+  contain: paint;
+}
+:root[data-theme="light"] .roll-stage {
+  background:
+    radial-gradient(120% 90% at 50% 110%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 62%),
+    #10131c;
+}
+
+/* Oben und unten weich auslaufen lassen, damit nichts hart abreißt. */
+.roll-stage::before,
+.roll-stage::after {
+  content: '';
+  position: absolute; left: 0; right: 0; height: 90px;
+  pointer-events: none; z-index: 2;
+}
+.roll-stage::before { top: 0; background: linear-gradient(#05060b, transparent); }
+.roll-stage::after { bottom: 0; background: linear-gradient(transparent, #05060b); }
+
+.roll-track {
+  position: absolute; left: 0; right: 0; top: 0;
+  padding: 0 clamp(1rem, 4vw, 3rem);
+  color: #e8ebf2;
+  text-align: center;
+  will-change: transform;
+}
+
+/* ---------- Bausteine des Abspanns ---------- */
+
+.roll-block { padding: 2.6rem 0; }
+.roll-block:first-child { padding-top: 0; }
+
+.roll-title {
+  font-size: clamp(2.2rem, 1.5rem + 4vw, 4.4rem);
+  font-weight: 850; letter-spacing: -.03em; line-height: 1.05;
+  margin: 0;
+  background: linear-gradient(180deg, #fff, #9d92ff);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.roll-sub {
+  margin: .6rem auto 0; max-width: 32ch;
+  color: #aab3c9; font-size: 1.02rem;
+}
+
+.roll-role {
+  font-size: .74rem; font-weight: 800; letter-spacing: .18em;
+  text-transform: uppercase; color: #7c6cff;
+  margin-bottom: .8rem;
+}
+.roll-name {
+  font-size: clamp(1.1rem, .95rem + .7vw, 1.5rem);
+  font-weight: 700; line-height: 1.4; margin: 0;
+}
+.roll-line {
+  font-size: 1rem; line-height: 1.65; margin: .25rem 0;
+  color: #d6dbe8;
+}
+.roll-note {
+  font-size: .88rem; color: #98a1b8; max-width: 46ch;
+  margin: .5rem auto 0; line-height: 1.6;
+}
+
+/* Zweispaltige Zeilen wie in echten Abspännen: Rolle links, Name rechts. */
+.roll-pairs {
+  display: grid; gap: .5rem 1.6rem;
+  grid-template-columns: 1fr auto 1fr;
+  max-width: 620px; margin: 0 auto;
+  font-size: .98rem;
+}
+.roll-pairs .l { text-align: right; color: #98a1b8; }
+.roll-pairs .d { color: #4a5268; }
+.roll-pairs .r { text-align: left; font-weight: 600; }
+
+.roll-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .45rem; }
+.roll-list li { font-size: 1rem; color: #d6dbe8; }
+
+.roll-rule {
+  width: 64px; height: 2px; margin: 0 auto;
+  background: linear-gradient(90deg, transparent, #7c6cff, transparent);
+  border: 0;
+}
+
+.roll-help {
+  display: inline-block; text-align: left;
+  border-left: 2px solid #2ee6a8; padding-left: 1rem;
+  color: #d6dbe8; font-size: .96rem; line-height: 1.75;
+}
+
+.roll-end {
+  font-size: clamp(1.4rem, 1.1rem + 1.6vw, 2.2rem);
+  font-weight: 800; letter-spacing: -.02em;
+}
+
+/* ---------- Steuerung ---------- */
+
+.roll-controls {
+  display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
+  margin-top: .9rem;
+}
+.roll-controls .spacer { flex: 1; }
+.roll-progress {
+  height: 4px; border-radius: 999px;
+  background: var(--surface-3); border: 1px solid var(--border);
+  overflow: hidden; margin-top: .2rem;
+}
+.roll-progress > span {
+  display: block; height: 100%; width: 0%;
+  background: var(--accent); border-radius: 999px;
+}
+
+/* Wer keine Bewegung will, bekommt den Abspann als ruhige Liste. */
+.roll-static .roll-stage { height: auto; overflow: visible; box-shadow: none; }
+.roll-static .roll-stage::before,
+.roll-static .roll-stage::after { display: none; }
+.roll-static .roll-track { position: static; transform: none !important; padding-block: 2rem; }
+.roll-static .roll-controls .is-playback { display: none; }

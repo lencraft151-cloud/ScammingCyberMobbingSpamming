@@ -345,6 +345,49 @@ try {
     await p.close();
   }
 
+  /* ---------- Abspann ---------- */
+  {
+    const p = await openPage('/credits.html');
+    const blocks = await p.eval("document.querySelectorAll('.roll-block').length");
+    check('Abspann hat Inhalt', blocks >= 12, `${blocks} Bausteine`);
+
+    // Er muss von allein laufen: Der Versatz verändert sich über die Zeit.
+    const moved = await p.eval(`(async () => {
+      const tr = document.getElementById('rollTrack');
+      const before = tr.style.transform;
+      await new Promise(r => setTimeout(r, 2500));
+      return JSON.stringify({ before, after: tr.style.transform });
+    })()`);
+    const m = JSON.parse(moved);
+    check('Abspann läuft von allein durch', m.before !== m.after, moved);
+
+    // Pause muss ihn wirklich anhalten.
+    const paused = await p.eval(`(async () => {
+      document.querySelectorAll('.roll-controls button')[0].click();
+      const tr = document.getElementById('rollTrack');
+      const before = tr.style.transform;
+      await new Promise(r => setTimeout(r, 1200));
+      return before === tr.style.transform ? 'steht' : 'läuft weiter';
+    })()`);
+    check('Pause hält den Abspann an', paused === 'steht', paused);
+
+    // Die Story-Titel im Abspann kommen aus den Daten, nicht aus fester Liste.
+    const listed = await p.eval(
+      "document.querySelector('.roll-track').innerText.includes('Das Paket, das nie kam')");
+    check('Abspann nennt die echten Story-Titel', listed);
+
+    const asList = await p.eval(`(async () => {
+      const btns = [...document.querySelectorAll('.roll-controls button')];
+      btns[btns.length - 1].click();
+      await new Promise(r => setTimeout(r, 300));
+      return document.body.classList.contains('roll-static') ? 'liste' : 'immer noch abspann';
+    })()`);
+    check('Abspann lässt sich als Liste lesen', asList === 'liste', asList);
+    check('Abspann ohne Konsolenfehler', p.errors.length === 0, p.errors.join(' | '));
+    await p.shot('play-abspann');
+    await p.close();
+  }
+
   /* ---------- Sprachumschalter ---------- */
   {
     const p = await openPage('/index.html');

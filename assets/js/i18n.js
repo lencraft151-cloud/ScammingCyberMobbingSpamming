@@ -144,6 +144,14 @@ const STRINGS = {
     'spam.retry': 'Nochmal versuchen',
 
     'credits.title': 'Credits & Hilfe',
+    'credits.rollLabel': 'Abspann',
+    'credits.play': 'Abspielen',
+    'credits.pause': 'Pause',
+    'credits.restart': 'Von vorn',
+    'credits.asText': 'Als Liste lesen',
+    'credits.asRoll': 'Wieder abspielen lassen',
+    'credits.readAll': 'Alles zum Nachlesen',
+    'credits.rollHint': 'Leertaste hält den Abspann an.',
 
     'learn.why': 'Warum das funktioniert',
     'learn.tactic': 'Eingesetzter Hebel',
@@ -297,6 +305,14 @@ const STRINGS = {
     'spam.retry': 'Try again',
 
     'credits.title': 'Credits & help',
+    'credits.rollLabel': 'Closing credits',
+    'credits.play': 'Play',
+    'credits.pause': 'Pause',
+    'credits.restart': 'From the top',
+    'credits.asText': 'Read as a list',
+    'credits.asRoll': 'Play it again',
+    'credits.readAll': 'Everything in full',
+    'credits.rollHint': 'Space bar pauses the credits.',
 
     'learn.why': 'Why this works',
     'learn.tactic': 'Technique in play',
