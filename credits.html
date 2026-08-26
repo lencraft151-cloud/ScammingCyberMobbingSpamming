@@ -8,6 +8,13 @@
 <meta name="color-scheme" content="dark light">
 <link rel="stylesheet" href="./assets/css/base.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='52' font-size='52'>🕵️</text></svg>">
+<script>
+/* Gespeicherte Darstellung setzen, bevor die Seite gezeichnet wird. */
+try{var s=JSON.parse(localStorage.getItem('durchschaut.v1')||'{}');
+if(s.theme)document.documentElement.dataset.theme=s.theme;
+if(s.motion)document.documentElement.dataset.motion=s.motion;
+if(s.lang)document.documentElement.lang=s.lang;}catch(e){}
+</script>
 </head>
 <body>
 <a class="skip-link" href="#main" data-i18n="nav.skip">Zum Hauptinhalt springen</a>
@@ -21,9 +28,9 @@
       <a href="./klassenchat.html" data-page="chat"    data-i18n="nav.chat">Klassenchat</a>
       <a href="./spam.html"        data-page="spam"    data-i18n="nav.spam">Spam-Flut</a>
       <a href="./credits.html"     data-page="credits" data-i18n="nav.credits">Credits</a>
-      <button class="btn btn-icon btn-ghost" type="button" data-open-settings
-              data-i18n-attr="aria-label:nav.settings; title:nav.settings">⚙</button>
     </nav>
+    <button class="btn btn-icon btn-ghost settings-btn" type="button" data-open-settings
+            data-i18n-attr="aria-label:nav.settings; title:nav.settings">⚙</button>
   </div>
 </header>
 

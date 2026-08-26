@@ -15,6 +15,7 @@ import { validateStory } from '../assets/js/engine.js';
 import stories from '../assets/js/data/scams/index.js';
 import klassenchat, { pickEnding } from '../assets/js/data/klassenchat.js';
 import { POPUPS, DARK_PATTERNS, TIPS } from '../assets/js/data/spam.js';
+import { readFile, readdir } from 'node:fs/promises';
 
 let failures = 0;
 const report = (label, problems) => {
@@ -120,6 +121,67 @@ POPUPS.forEach((p, i) => {
 DARK_PATTERNS.forEach((p, i) => bilingual(p, `DARK_PATTERNS[${i}]`));
 TIPS.forEach((p, i) => bilingual(p, `TIPS[${i}]`));
 report('  Popups & Dark Patterns', spamProblems);
+
+/* ---------- Oberflächentexte ---------- */
+
+// Jeder data-i18n-Schlüssel im HTML muss in beiden Sprachen existieren,
+// sonst steht auf der Seite später der nackte Schlüssel.
+console.log('\nOberflächentexte');
+const i18nSource = await readFile(new URL('../assets/js/i18n.js', import.meta.url), 'utf8');
+const catalogues = {};
+for (const langMatch of i18nSource.matchAll(/^  (de|en): \{$([\s\S]*?)^  \},$/gm)) {
+  catalogues[langMatch[1]] = new Set(
+    [...langMatch[2].matchAll(/^\s*'([\w.]+)':/gm)].map((m) => m[1]));
+}
+
+const uiProblems = [];
+for (const lang of ['de', 'en']) {
+  if (!catalogues[lang]) uiProblems.push(`Katalog "${lang}" nicht gefunden`);
+}
+if (catalogues.de && catalogues.en) {
+  [...catalogues.de].forEach((k) => {
+    if (!catalogues.en.has(k)) uiProblems.push(`"${k}" fehlt im englischen Katalog`);
+  });
+  [...catalogues.en].forEach((k) => {
+    if (!catalogues.de.has(k)) uiProblems.push(`"${k}" fehlt im deutschen Katalog`);
+  });
+}
+
+const root = new URL('../', import.meta.url);
+const htmlFiles = (await readdir(root)).filter((f) => f.endsWith('.html'));
+for (const file of htmlFiles) {
+  const html = await readFile(new URL(file, root), 'utf8');
+  const keys = [
+    ...[...html.matchAll(/data-i18n="([^"]+)"/g)].map((m) => m[1]),
+    ...[...html.matchAll(/data-i18n-attr="([^"]+)"/g)]
+      .flatMap((m) => m[1].split(';').map((pair) => pair.split(':')[1]?.trim()).filter(Boolean)),
+  ];
+  keys.forEach((k) => {
+    if (!catalogues.de?.has(k)) uiProblems.push(`${file}: "${k}" fehlt im deutschen Katalog`);
+    if (!catalogues.en?.has(k)) uiProblems.push(`${file}: "${k}" fehlt im englischen Katalog`);
+  });
+  // Zweisprachige Fließtextblöcke müssen paarweise auftreten.
+  const de = (html.match(/data-lang="de"/g) || []).length;
+  const en = (html.match(/data-lang="en"/g) || []).length;
+  if (de !== en) uiProblems.push(`${file}: ${de} deutsche, aber ${en} englische Textblöcke`);
+}
+
+// Auch die aus dem JavaScript heraus gesetzten Schlüssel prüfen.
+for (const dir of ['../assets/js', '../assets/js/pages']) {
+  const base = new URL(`${dir}/`, import.meta.url);
+  for (const file of (await readdir(base)).filter((f) => f.endsWith('.js'))) {
+    const code = await readFile(new URL(file, base), 'utf8');
+    for (const m of code.matchAll(/\bt\('([\w.]+)'\)/g)) {
+      if (!catalogues.de?.has(m[1])) uiProblems.push(`${file}: t('${m[1]}') fehlt im deutschen Katalog`);
+      if (!catalogues.en?.has(m[1])) uiProblems.push(`${file}: t('${m[1]}') fehlt im englischen Katalog`);
+    }
+    for (const m of code.matchAll(/'data-i18n': '([\w.]+)'/g)) {
+      if (!catalogues.de?.has(m[1])) uiProblems.push(`${file}: data-i18n "${m[1]}" fehlt (de)`);
+      if (!catalogues.en?.has(m[1])) uiProblems.push(`${file}: data-i18n "${m[1]}" fehlt (en)`);
+    }
+  }
+}
+report(`  ${htmlFiles.length} HTML-Seiten und alle t()-Aufrufe`, [...new Set(uiProblems)]);
 
 /* ---------- Ergebnis ---------- */
 

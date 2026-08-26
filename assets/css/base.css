@@ -83,9 +83,14 @@ body {
     radial-gradient(900px 520px at 12% -8%, var(--bg-glow), transparent 62%),
     radial-gradient(760px 460px at 92% 4%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 60%);
   background-attachment: fixed;
-  min-height: 100vh;
   overflow-wrap: break-word;
+  /* Fußzeile unten halten, auch wenn der Inhalt kurz ist. */
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
 }
+main { flex: 1 0 auto; }
+.site-footer { flex: none; }
 img, svg { max-width: 100%; }
 button, input, select, textarea { font: inherit; color: inherit; }
 h1, h2, h3, h4 { line-height: 1.22; margin: 0 0 .5em; font-weight: 700; letter-spacing: -.015em; }
@@ -121,6 +126,7 @@ a:hover { color: var(--text); }
 .wrap { width: min(100% - 2rem, var(--wrap)); margin-inline: auto; }
 .stack > * + * { margin-top: var(--gap, 1rem); }
 main { padding-block: clamp(1.5rem, 1rem + 3vw, 3rem) 4rem; }
+.site-header { flex: none; }
 
 /* ---------- Kopfzeile ---------- */
 .site-header {
@@ -152,6 +158,22 @@ main { padding-block: clamp(1.5rem, 1rem + 3vw, 3rem) 4rem; }
 }
 .nav a:hover { background: var(--surface-2); color: var(--text); }
 .nav a[aria-current="page"] { background: var(--surface-2); color: var(--text); font-weight: 650; }
+.settings-btn { flex: none; }
+
+/* Auf schmalen Geräten rutscht die Navigation in eine eigene Zeile und
+   lässt sich seitlich schieben, statt in drei Reihen umzubrechen. */
+@media (max-width: 680px) {
+  .site-header .bar { flex-wrap: wrap; row-gap: .3rem; min-height: 0; padding-block: .55rem; }
+  .brand { font-size: 1rem; }
+  .settings-btn { margin-left: auto; }
+  .nav {
+    order: 3; width: 100%; margin-left: 0;
+    flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain;
+    scrollbar-width: none; -ms-overflow-style: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { white-space: nowrap; }
+}
 
 /* ---------- Knöpfe ---------- */
 .btn {
