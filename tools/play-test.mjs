@@ -86,6 +86,22 @@ async function openPage(url) {
 }
 
 let failures = 0;
+
+/**
+ * Fragt die Seite wiederholt ab, bis der Ausdruck etwas Wahres liefert.
+ * Die Schleife läuft bewusst hier und nicht in der Seite: ein einzelner
+ * DevTools-Aufruf, der zwanzig Sekunden wartet, läuft auf langsamen
+ * Rechnern in die Zeitgrenze und reißt den ganzen Lauf mit.
+ */
+async function poll(page, expression, { tries = 80, waitMs = 250 } = {}) {
+  for (let i = 0; i < tries; i += 1) {
+    const value = await page.eval(expression);
+    if (value) return value;
+    await delay(waitMs);
+  }
+  return null;
+}
+
 const check = (label, ok, detail = '') => {
   if (ok) console.log(`✓ ${label}`);
   else { failures += 1; console.error(`✗ ${label}${detail ? ` — ${detail}` : ''}`); }
@@ -243,15 +259,10 @@ try {
     check('Zwei Anzeigen laufen mit', meters >= 2, `${meters} gefunden`);
 
     // Zeit einmal komplett ablaufen lassen: Schweigen muss gewertet werden.
-    const silence = await p.eval(`(async () => {
-      for (let i = 0; i < 80; i++) {
-        await new Promise(r => setTimeout(r, 250));
-        const sys = [...document.querySelectorAll('.sys-line')].map(n => n.textContent);
-        if (sys.some(s => /schreibst nichts|type nothing/i.test(s))) return 'gewertet';
-      }
-      return 'nichts passiert';
-    })()`);
-    check('Ablaufende Zeit zählt als Schweigen', silence === 'gewertet', silence);
+    const silence = await poll(p,
+      "[...document.querySelectorAll('.sys-line')].some(n => /schreibst nichts|type nothing/i.test(n.textContent)) || null",
+      { tries: 100 });
+    check('Ablaufende Zeit zählt als Schweigen', !!silence, 'nicht aufgetaucht');
     check('Klassenchat ohne Konsolenfehler', p.errors.length === 0, p.errors.join(' | '));
     await p.shot('play-klassenchat');
     await p.close();
@@ -303,53 +314,49 @@ try {
     // beim Hydra-Muster öffnen sich beim Schließen absichtlich zwei neue.
     // Welche Fenstertypen offen sind, ist Zufall — deshalb wird auf ein
     // passendes gewartet, statt das erstbeste zu erwischen.
-    const closed = await p.eval(`(async () => {
-      for (let i = 0; i < 60; i++) {
-        const pop = [...document.querySelectorAll('.pop')]
-          .find(p => p.dataset.pattern !== 'fakeX' && p.dataset.pattern !== 'hydra');
-        if (pop) {
-          pop.querySelector('.pop-x').click();
-          return pop.isConnected ? 'blieb offen' : 'geschlossen';
-        }
-        await new Promise(r => setTimeout(r, 250));
-      }
-      return 'kein passendes Fenster aufgetaucht';
-    })()`);
-    check('Echtes Schließkreuz schließt das Fenster', closed === 'geschlossen', closed);
+    const closed = await poll(p, `(() => {
+      const pop = [...document.querySelectorAll('.pop')]
+        .find(x => x.dataset.pattern !== 'fakeX' && x.dataset.pattern !== 'hydra');
+      if (!pop) return null;
+      pop.querySelector('.pop-x').click();
+      return pop.isConnected ? 'blieb offen' : 'geschlossen';
+    })()`, { tries: 60 });
+    check('Echtes Schließkreuz schließt das Fenster', closed === 'geschlossen',
+      closed || 'kein passendes Fenster aufgetaucht');
 
     // Ein falsches Schließkreuz darf gerade nicht harmlos sein.
     // Der Risikobalken wird erst im nächsten Takt (100 ms) neu gezeichnet —
     // ohne kurzes Warten liest man immer noch den alten Wert.
-    const fakeX = await p.eval(`(async () => {
-      const risk = () => parseFloat(document.querySelectorAll('.meter-fill')[1].style.width) || 0;
-      for (let i = 0; i < 120; i++) {
-        const pop = [...document.querySelectorAll('.pop')].find(p => p.dataset.pattern === 'fakeX');
-        if (pop) {
-          const before = risk();
-          pop.querySelector('.pop-x').click();
-          await new Promise(r => setTimeout(r, 400));
-          return risk() > before ? 'schadet' : 'schadet nicht (' + before + ' -> ' + risk() + ')';
-        }
-        await new Promise(r => setTimeout(r, 250));
-      }
-      return 'nicht aufgetaucht';
-    })()`);
-    if (fakeX === 'nicht aufgetaucht') {
+    const readRisk = "(() => { const m = document.querySelectorAll('.meter-fill')[1];"
+      + " return m ? (parseFloat(m.style.width) || 0) : null; })()";
+    const hitFakeX = await poll(p, `(() => {
+      const pop = [...document.querySelectorAll('.pop')].find(x => x.dataset.pattern === 'fakeX');
+      if (!pop) return null;
+      window.__riskBefore = (() => {
+        const m = document.querySelectorAll('.meter-fill')[1];
+        return m ? (parseFloat(m.style.width) || 0) : 0;
+      })();
+      pop.querySelector('.pop-x').click();
+      return 'geklickt';
+    })()`, { tries: 60 });
+    if (!hitFakeX) {
       skip('Falsches Schließkreuz erhöht das Risiko', 'kein solches Fenster in dieser Runde');
     } else {
-      check('Falsches Schließkreuz erhöht das Risiko', fakeX === 'schadet', fakeX);
+      // Der Balken wird erst im nächsten Takt (100 ms) neu gezeichnet.
+      await delay(500);
+      const after = await p.eval(readRisk);
+      const before = await p.eval('window.__riskBefore ?? 0');
+      check('Falsches Schließkreuz erhöht das Risiko',
+        after !== null && after > before, `${before} -> ${after}`);
     }
 
     // Spiel bis zum Ende treiben, indem gezielt in die Fallen geklickt wird.
-    const ended = await p.eval(`(async () => {
-      for (let i = 0; i < 60; i++) {
-        await new Promise(r => setTimeout(r, 250));
-        if (document.querySelector('.verdict')) return 'ende';
-        document.querySelector('.pop .pop-btn.primary')?.click();
-      }
-      return 'kein ende';
-    })()`);
-    check('Spam-Runde erreicht eine Auswertung', ended === 'ende', ended);
+    const ended = await poll(p, `(() => {
+      if (document.querySelector('.verdict')) return 'ende';
+      document.querySelector('.pop .pop-btn.primary')?.click();
+      return null;
+    })()`, { tries: 80 });
+    check('Spam-Runde erreicht eine Auswertung', ended === 'ende', ended || 'kein Ende erreicht');
     const traps = await p.eval("document.querySelectorAll('.trap-list li').length + (document.querySelector('.note-safe') ? 1 : 0)");
     check('Auswertung erklärt die Tricks', traps >= 1, `${traps} Einträge`);
     check('Spam-Modus ohne Konsolenfehler', p.errors.length === 0, p.errors.join(' | '));
@@ -421,6 +428,10 @@ try {
     check('Sprache wird gespeichert', persisted === htmlLang, `${persisted} / ${htmlLang}`);
     await p.close();
   }
+} catch (err) {
+  // Ein Abbruch soll einen lesbaren Bericht hinterlassen, keinen Stacktrace.
+  failures += 1;
+  console.error(`\n✗ Lauf abgebrochen: ${err.message}`);
 } finally {
   chrome.kill();
 }
