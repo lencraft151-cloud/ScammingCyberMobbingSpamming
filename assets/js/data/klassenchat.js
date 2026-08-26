@@ -75,6 +75,12 @@ export default {
       why: bi('Vom Foto zum Spitznamen, vom Spitznamen zum Fake-Account, vom Fake-Account zur Umfrage. Keiner dieser Schritte fühlt sich groß an — deshalb widerspricht bei keinem jemand.',
               'From the photo to the nickname, from the nickname to the fake account, from the fake account to the poll. None of these steps feels big — which is why nobody objects to any of them.'),
     },
+    askedDirectly: {
+      label: bi('Sie hat dich direkt um Hilfe gebeten',
+                'She asked you for help directly'),
+      why: bi('Solange niemand gefragt wird, kann sich jeder hinter „ich dachte, das regelt schon wer" verstecken. Eine direkte Bitte nimmt genau diese Ausrede weg — ab da ist Nichtstun eine Antwort.',
+              'While nobody is asked, everyone can hide behind “I assumed somebody else would handle it”. A direct request removes exactly that excuse — from then on doing nothing is an answer.'),
+    },
     noOwner: {
       label: bi('Am Ende war es niemand',
                 'In the end it was nobody'),
@@ -188,26 +194,26 @@ export default {
       choices: [
         { text: bi('„Sie hat gesagt, sie will das nicht. Das reicht."',
                    '“She said she does not want this. That is enough.”'),
-          next: 'p3', effects: { courage: 3, mia: 8 }, verdict: 'good', catches: ['joke', 'pileOn'],
+          next: 'p2b', effects: { courage: 3, mia: 8 }, verdict: 'good', catches: ['joke', 'pileOn'],
           echo: { from: 'me', text: bi('sie hat gesagt sie will das nicht. das reicht.',
                                        'she said she does not want this. that is enough.') },
           why: bi('Du benennst die Grenze, statt über den Witz zu diskutieren. Das ist der Trick: Über „war das lustig" kann man streiten, über „sie will es nicht" nicht.',
                   'You name the boundary instead of arguing about the joke. That is the move: “was it funny” is arguable, “she does not want this” is not.') },
         { text: bi('„War doch wirklich nur Spaß, Mia."',
                    '“It really was just a joke, Mia.”'),
-          next: 'p3', effects: { courage: -2, mia: -8 }, verdict: 'bad',
+          next: 'p2b', effects: { courage: -2, mia: -8 }, verdict: 'bad',
           echo: { from: 'me', text: bi('war doch wirklich nur spaß mia', 'it really was just a joke mia') },
           why: bi('Damit erklärst du der betroffenen Person, dass ihr eigenes Gefühl falsch ist. Für Mia ist das die zweite Verletzung nach der ersten.',
                   'You are telling the person affected that her own feeling is wrong. For Mia that is a second injury on top of the first.') },
         { text: bi('Das Foto bei der App melden',
                    'Report the photo in the app'),
-          next: 'p3', effects: { courage: 2, mia: 4 }, verdict: 'good', catches: ['photo'],
+          next: 'p2b', effects: { courage: 2, mia: 4 }, verdict: 'good', catches: ['photo'],
           echo: { kind: 'system', text: bi('Du meldest das Bild. Eine Bestätigung erscheint.',
                                            'You report the image. A confirmation appears.') },
           why: bi('Melden ist leise und wirksam: Niemand im Chat sieht, dass du es warst. Für alle, die sich öffentliches Widersprechen nicht zutrauen, ist das der Weg.',
                   'Reporting is quiet and effective: nobody in the chat sees it was you. For anyone who cannot face objecting publicly, this is the route.') },
         { text: bi('Nichts tun', 'Do nothing'),
-          next: 'p3', effects: { courage: 0, mia: -6 }, verdict: 'meh', timeout: true,
+          next: 'p2b', effects: { courage: 0, mia: -6 }, verdict: 'meh', timeout: true,
           echo: { kind: 'system', text: bi('Niemand widerspricht. Der Chat läuft weiter.',
                                            'Nobody objects. The chat rolls on.') },
           why: bi('Nach Mias ausdrücklicher Bitte wiegt Schweigen schwerer als vorher: Jetzt weiß die Gruppe, dass es ihr nicht egal ist.',
@@ -215,9 +221,70 @@ export default {
       ],
     },
 
-    /* ============ Kapitel 3: Der Fake-Account ============ */
+    /* ============ Kapitel 3: Die private Nachricht ============ */
+    p2b: {
+      chapter: bi('Kapitel 3 — Die private Nachricht', 'Chapter 3 — The private message'),
+      messages: [
+        { kind: 'system', text: bi('Dienstag, 21:14 · Privat', 'Tuesday, 21:14 · Private') },
+        { from: 'them', sender: P.mia, time: '21:14', text: bi(
+          'hey. sorry dass ich dich privat anschreibe.',
+          'hey. sorry for messaging you privately.') },
+        { from: 'them', sender: P.mia, time: '21:15', text: bi(
+          'kannst du morgen bitte was sagen wenn das wieder losgeht? auf dich hören die eher als auf mich.',
+          'could you please say something tomorrow if it starts up again? they listen to you more than to me.') },
+        { from: 'them', sender: P.mia, time: '21:18', text: bi(
+          'ich will auch nicht dass es wegen mir stress gibt. sag einfach wenn du nicht willst.',
+          'I do not want to cause you any hassle either. just say if you would rather not.') },
+      ],
+      flags: ['askedDirectly'],
+      tactic: 'shame',
+      info: {
+        icon: '🙋',
+        title: bi('Eine direkte Bitte verändert die Lage',
+                  'A direct request changes the situation'),
+        body: [
+          bi('Der Zuschauereffekt funktioniert, solange die Verantwortung auf alle verteilt ist. Sobald eine Person namentlich gefragt wird, verschwindet er fast vollständig — das ist einer der stabilsten Befunde der Sozialpsychologie.',
+             'The bystander effect works while responsibility is spread across everybody. As soon as one person is asked by name it almost entirely disappears — one of the most robust findings in social psychology.'),
+          bi('Genau deshalb ist der beste Rat an Betroffene: nicht in die Gruppe rufen, sondern eine einzelne Person direkt ansprechen. Mia macht gerade genau das Richtige.',
+             'Which is why the best advice to anyone affected is: do not appeal to the group, ask one specific person. Mia is doing exactly the right thing.'),
+          bi('Und sie baut dir schon eine Brücke zum Ablehnen. Das macht ein Nein leichter — und ein Ja umso deutlicher.',
+             'And she is already giving you a way out. That makes saying no easier — and saying yes all the more meaningful.'),
+        ],
+      },
+      timer: 18,
+      prompt: bi('Sie fragt dich. Nicht die Gruppe, dich.',
+                 'She is asking you. Not the group, you.'),
+      choices: [
+        { text: bi('„Ja. Ich sag was."', '“Yes. I will say something.”'),
+          next: 'p3', effects: { courage: 3, mia: 12 }, verdict: 'good', catches: ['askedDirectly'],
+          echo: { kind: 'system', text: bi('Privat an Mia: „Ja. Ich sag was."',
+                                           'Privately to Mia: “Yes. I will say something.”') },
+          why: bi('Eine Zusage ist mehr als Trost: Sie nimmt Mia das Gefühl, allein damit zu sein — und dich nimmt sie in die Pflicht, was morgen genau der Punkt ist.',
+                  'A promise is more than comfort: it takes away Mia’s sense of being alone with it — and it commits you, which is precisely the point tomorrow.') },
+        { text: bi('„Ich schreib dir, wenn du reden willst. Öffentlich lieber nicht."',
+                   '“Message me any time. But not publicly, I would rather not.”'),
+          next: 'p3', effects: { courage: 0, mia: 3 }, verdict: 'meh',
+          echo: { kind: 'system', text: bi('Mia: „ok. danke trotzdem."', 'Mia: “ok. thanks anyway.”') },
+          why: bi('Ehrlich und immerhin etwas. Für die Gruppe ändert sich nichts — und morgen steht Mia wieder allein da.',
+                  'Honest, and something at least. Nothing changes for the group — and tomorrow Mia stands alone again.') },
+        { text: bi('„Sorry, da will ich nicht reingezogen werden."',
+                   '“Sorry, I do not want to get dragged into this.”'),
+          next: 'p3', effects: { courage: -2, mia: -8 }, verdict: 'bad',
+          echo: { kind: 'system', text: bi('Mia antwortet nicht mehr.', 'Mia does not reply again.') },
+          why: bi('Du bist längst drin — du liest ja mit. Die Frage war nie, ob du beteiligt bist, sondern auf welcher Seite.',
+                  'You are already in it — you are reading along. The question was never whether you are involved, but on which side.') },
+        { text: bi('Nicht antworten', 'Not reply'),
+          next: 'p3', effects: { courage: -1, mia: -10 }, verdict: 'bad', timeout: true,
+          echo: { kind: 'system', text: bi('Gelesen um 21:19. Keine Antwort.',
+                                           'Read at 21:19. No reply.') },
+          why: bi('Eine gelesene, unbeantwortete Bitte um Hilfe trifft härter als Schweigen im Gruppenchat. Mia weiß jetzt, dass du es gesehen hast.',
+                  'A request for help that is read and left unanswered lands harder than silence in a group chat. Mia now knows you saw it.') },
+      ],
+    },
+
+    /* ============ Kapitel 4: Der Fake-Account ============ */
     p3: {
-      chapter: bi('Kapitel 3 — Der Fake-Account', 'Chapter 3 — The fake account'),
+      chapter: bi('Kapitel 4 — Der Fake-Account', 'Chapter 4 — The fake account'),
       messages: [
         { kind: 'system', text: bi('Mittwoch, 07:12', 'Wednesday, 07:12') },
         { from: 'them', sender: P.leo, time: '07:12', text: bi(
@@ -283,7 +350,7 @@ export default {
 
     /* ============ Kapitel 4a: mit Verbündeten ============ */
     p4_ally: {
-      chapter: bi('Kapitel 4 — Die Umfrage', 'Chapter 4 — The poll'),
+      chapter: bi('Kapitel 5 — Die Umfrage', 'Chapter 5 — The poll'),
       messages: [
         { from: 'them', sender: P.emily, time: '07:18', text: bi('ja ehrlich, das geht zu weit',
                                                                  'yeah honestly, this is going too far') },
@@ -337,7 +404,7 @@ export default {
 
     /* ============ Kapitel 4b: allein ============ */
     p4_alone: {
-      chapter: bi('Kapitel 4 — Die Umfrage', 'Chapter 4 — The poll'),
+      chapter: bi('Kapitel 5 — Die Umfrage', 'Chapter 5 — The poll'),
       messages: [
         { from: 'them', sender: P.jonas, time: '07:22', text: bi(
           'umfrage: wer findet mia auch cringe? 👇',
@@ -395,7 +462,7 @@ export default {
 
     /* ============ Kapitel 5: Mia geht ============ */
     p5: {
-      chapter: bi('Kapitel 5 — Mia geht', 'Chapter 5 — Mia leaves'),
+      chapter: bi('Kapitel 6 — Mia geht', 'Chapter 6 — Mia leaves'),
       messages: [
         { kind: 'system', text: bi('Mia hat die Gruppe verlassen.', 'Mia has left the group.') },
         { from: 'them', sender: P.jonas, time: '07:36', text: bi('lol beleidigt', 'lol she is offended') },
@@ -426,31 +493,95 @@ export default {
       choices: [
         { text: bi('Mit der Klassenlehrerin sprechen und die Screenshots zeigen',
                    'Talk to the form tutor and show the screenshots'),
-          next: 'end', effects: { courage: 4, mia: 14 }, verdict: 'good', catches: ['silence', 'fakeAccount'],
+          next: 'p6', effects: { courage: 4, mia: 14 }, verdict: 'good', catches: ['silence', 'fakeAccount'],
           echo: { kind: 'system', text: bi('Am Freitag gibt es eine Klassenstunde. Der Fake-Account ist gelöscht.',
                                            'On Friday there is a class meeting. The fake account is gone.') },
           why: bi('Der wirksamste Schritt überhaupt. Er beendet es nicht nur für Mia, sondern auch für die nächste Person.',
                   'The most effective step there is. It ends it not only for Mia but for the next person too.') },
         { text: bi('Mia schreiben: „Ich hätte früher was sagen sollen. Tut mir leid."',
                    'Message Mia: “I should have said something sooner. I am sorry.”'),
-          next: 'end', effects: { courage: 3, mia: 12 }, verdict: 'good', catches: ['silence'],
+          next: 'p6', effects: { courage: 3, mia: 12 }, verdict: 'good', catches: ['silence'],
           echo: { kind: 'system', text: bi('Privat an Mia. Nach zwanzig Minuten: „danke. echt."',
                                            'Privately to Mia. Twenty minutes later: “thanks. really.”') },
           why: bi('Zu spät ist besser als gar nicht. Eine Entschuldigung, die nichts beschönigt, wiegt mehr als eine Erklärung.',
                   'Too late beats never. An apology that excuses nothing is worth more than an explanation.') },
         { text: bi('Lena antworten, was wirklich passiert ist',
                    'Tell Lena what actually happened'),
-          next: 'end', effects: { courage: 2, mia: 6 }, verdict: 'good', catches: ['noOwner'],
+          next: 'p6', effects: { courage: 2, mia: 6 }, verdict: 'good', catches: ['noOwner'],
           echo: { from: 'me', text: bi('sie wurde die letzten zwei tage hier fertiggemacht. deshalb.',
                                        'she got torn apart in here for two days. that is why.') },
           why: bi('Es beim Namen zu nennen verhindert die bequemste Version: dass hinterher niemand weiß, wie es dazu kam.',
                   'Naming it prevents the most convenient version of events: that afterwards nobody knows how it came about.') },
         { text: bi('Nichts tun', 'Do nothing'),
-          next: 'end', effects: { courage: -2, mia: -10 }, verdict: 'bad', timeout: true,
+          next: 'p6', effects: { courage: -2, mia: -10 }, verdict: 'bad', timeout: true,
           echo: { kind: 'system', text: bi('Der Chat redet über das Wochenende. Über Mia redet niemand mehr.',
                                            'The chat moves on to the weekend. Nobody mentions Mia again.') },
           why: bi('Wie das ausgeht, hängt nicht davon ab, dass Mia stärker wird. Es hängt davon ab, ob jemand etwas sagt.',
                   'How this ends does not depend on Mia becoming tougher. It depends on whether somebody speaks.') },
+      ],
+    },
+
+    /* ============ Kapitel 7: Die Klassenstunde ============ */
+    p6: {
+      chapter: bi('Kapitel 7 — Die Klassenstunde', 'Chapter 7 — The class meeting'),
+      messages: [
+        { kind: 'system', text: bi(
+          'Freitag, dritte Stunde. Frau Alkan hat die Stühle im Kreis aufgestellt. Auf dem Tisch liegt ein Ausdruck von zwei Screenshots.',
+          'Friday, third period. Ms Alkan has put the chairs in a circle. Two printed screenshots lie on the table.') },
+        { kind: 'system', text: bi(
+          '„Ich weiß, was diese Woche im Klassenchat passiert ist. Ich will keine Namen hören. Ich will wissen, was ihr gedacht habt, während ihr es gelesen habt."',
+          '“I know what happened in the class chat this week. I do not want names. I want to know what you were thinking while you read it.”') },
+        { kind: 'system', text: bi('Vierzig Sekunden sagt niemand etwas.',
+                                   'For forty seconds nobody says anything.') },
+      ],
+      flags: ['noOwner', 'silence'],
+      tactic: 'socialProof',
+      info: {
+        icon: '🪑',
+        title: bi('Warum die Aufarbeitung fast immer scheitert',
+                  'Why the reckoning almost always fails'),
+        body: [
+          bi('Nachher erinnert sich niemand mehr daran, mitgemacht zu haben. Jeder hat ja nur ein Emoji gesetzt, nur einmal abgestimmt, nur nichts gesagt. Aus zwanzig winzigen Beiträgen wird ein Ereignis ohne Verursacher.',
+             'Afterwards nobody remembers taking part. Everyone only added an emoji, only voted once, only said nothing. Twenty tiny contributions become an event with no author.'),
+          bi('Für Mia ist das der zweite Schlag: Erst passiert es, dann war es niemand. Deshalb ist der erste Mensch, der „ich war das auch" sagt, in dieser Runde der wichtigste.',
+             'For Mia that is the second blow: first it happens, then nobody did it. Which is why the first person to say “that was me too” is the most important one in this circle.'),
+          bi('Und es ist leichter, als es aussieht: Nach dem ersten Eingeständnis melden sich fast immer weitere.',
+             'And it is easier than it looks: after the first admission, others almost always follow.'),
+        ],
+      },
+      timer: 20,
+      prompt: bi('Vierzig Sekunden Stille. Jemand muss anfangen.',
+                 'Forty seconds of silence. Somebody has to start.'),
+      choices: [
+        { text: bi('„Ich hab mitgelacht. Das war falsch."',
+                   '“I laughed along. That was wrong.”'),
+          next: 'end', effects: { courage: 4, mia: 10 }, verdict: 'good', catches: ['noOwner'],
+          echo: { kind: 'system', text: bi(
+            'Danach melden sich vier weitere. Emily fängt an zu weinen. Frau Alkan sagt nichts, sie lässt es einfach laufen.',
+            'Four more speak up after you. Emily starts crying. Ms Alkan says nothing, she just lets it happen.') },
+          why: bi('Das Schwerste im ganzen Modus — und das Wirksamste. Nach dem ersten Eingeständnis trauen sich fast immer weitere.',
+                  'The hardest thing in this whole mode — and the most effective. After the first admission others almost always follow.') },
+        { text: bi('„Es hat halt keiner was gesagt. Ich auch nicht."',
+                   '“Nobody said anything. Me neither.”'),
+          next: 'end', effects: { courage: 2, mia: 5 }, verdict: 'good', catches: ['silence'],
+          echo: { kind: 'system', text: bi('Ein paar nicken. Es bleibt beim Nicken.',
+                                           'A few people nod. It stops at nodding.') },
+          why: bi('Ehrlich, aber im Passiv. Das Schweigen zu benennen ist besser als nichts — es benennt nur niemanden, dich eingeschlossen.',
+                  'Honest, but in the passive voice. Naming the silence beats nothing — it just names nobody, yourself included.') },
+        { text: bi('„Das waren Jonas und Leo."', '“It was Jonas and Leo.”'),
+          next: 'end', effects: { courage: 0, mia: 2 }, verdict: 'meh',
+          echo: { kind: 'system', text: bi(
+            'Jonas dreht sich um: „Du hast doch mitgelacht." Die Stunde kippt in eine Diskussion darüber, wer schlimmer war.',
+            'Jonas turns round: “You laughed along too.” The meeting turns into an argument about who was worse.') },
+          why: bi('Stimmt sachlich und hilft trotzdem kaum: Sobald es um Schuldverteilung geht, geht es nicht mehr um Mia.',
+                  'Factually true and still barely helpful: the moment it becomes about apportioning blame, it stops being about Mia.') },
+        { text: bi('Nichts sagen', 'Say nothing'),
+          next: 'end', effects: { courage: -2, mia: -6 }, verdict: 'bad', timeout: true,
+          echo: { kind: 'system', text: bi(
+            'Nach zehn Minuten gibt Frau Alkan auf. „Dann eben nicht." Der Kreis wird aufgelöst.',
+            'After ten minutes Ms Alkan gives up. “All right then.” The circle breaks up.') },
+          why: bi('Auch hier ist Schweigen eine Entscheidung — und diesmal eine, die die Aufarbeitung verhindert.',
+                  'Here too silence is a decision — and this time one that prevents the reckoning altogether.') },
       ],
     },
 
@@ -467,7 +598,7 @@ export default {
   endings: [
     {
       id: 'stopped',
-      min: 12,
+      min: 17,
       tone: 'safe',
       role: bi('Ersthelfer:in', 'First responder'),
       roleWhy: bi('Du hast früh widersprochen und bist dabei geblieben. Andere haben sich angeschlossen, und die Gruppe ist gekippt.',
@@ -477,7 +608,7 @@ export default {
     },
     {
       id: 'softened',
-      min: 5,
+      min: 7,
       tone: 'close',
       role: bi('Zwischenrufer:in', 'Occasional objector'),
       roleWhy: bi('Du hast etwas gesagt, aber nicht durchgehalten. Das hat gebremst, nicht gestoppt.',
@@ -487,7 +618,7 @@ export default {
     },
     {
       id: 'watched',
-      min: -2,
+      min: -3,
       tone: 'close',
       role: bi('Zuschauer:in', 'Bystander'),
       roleWhy: bi('Du hast nichts Böses getan. Du hast auch nichts getan. Für Mia sah beides gleich aus.',
@@ -519,6 +650,10 @@ export default {
        'At the poll. One dissenting vote turns “everyone thinks so” back into “one person thinks so”.'),
     bi('Als Lena gefragt hat, was mit Mia ist. Da entschied sich, ob es aufgearbeitet wird oder verschwindet.',
        'When Lena asked what had happened to Mia. That decided whether it got dealt with or disappeared.'),
+    bi('Als Mia dich privat gefragt hat. Eine direkte Bitte lässt sich nicht mehr an die Gruppe zurückgeben.',
+       'When Mia asked you privately. A direct request cannot be handed back to the group.'),
+    bi('In der Klassenstunde. Der erste, der „ich war das auch" sagt, macht es allen anderen möglich.',
+       'At the class meeting. The first person to say “that was me too” makes it possible for everybody else.'),
   ],
 
   help: [

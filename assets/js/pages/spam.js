@@ -27,6 +27,8 @@ const state = {
   traps: new Set(),
   spawnTimer: null,
   tickTimer: null,
+  // Nachzügler des „kommt wieder"-Musters, damit sie eine Runde nicht überleben.
+  pending: new Set(),
 };
 
 let stage = null;
@@ -56,9 +58,12 @@ function showIntro() {
    ============================================================ */
 
 function startGame() {
+  state.pending.forEach(clearTimeout);
+  clearTimeout(state.spawnTimer);
+  clearInterval(state.tickTimer);
   Object.assign(state, {
     running: true, started: performance.now(),
-    risk: 0, closed: 0, open: new Set(), traps: new Set(),
+    risk: 0, closed: 0, open: new Set(), traps: new Set(), pending: new Set(),
   });
 
   stage = el('div', { class: 'spam-stage', id: 'stage' },
@@ -179,6 +184,12 @@ function buildPopup(tpl) {
     el('p', { text: L(tpl.body) }),
     tpl.fine ? el('p', { class: 'fine', text: L(tpl.fine) }) : null);
 
+  // Ein Balken, der aussieht, als würde er etwas prüfen. Er misst nichts.
+  if (tpl.progress) {
+    state.traps.add('fakeProgress');
+    body.append(el('div', { class: 'pop-scan' }, el('span')));
+  }
+
   if (tpl.countdown) {
     const count = el('span', { class: 'pop-count', text: `00:0${tpl.countdown}` });
     body.append(el('div', {}, count));
@@ -198,12 +209,18 @@ function buildPopup(tpl) {
     }, 1000);
   }
 
-  const actions = el('div', { class: 'pop-actions' },
-    ...tpl.buttons.map((b) => el('button', {
-      class: `pop-btn ${b.emphasis || ''}`,
-      type: 'button', text: L(b.label),
-      onclick: () => (b.role === 'malicious' ? hit(node, tpl) : close(node, tpl, b.role)),
-    })));
+  // Beim vertauschten Muster steht der harmlose Knopf dort, wo sonst der
+  // gefährliche sitzt — die Reihenfolge im DOM bleibt für Screenreader korrekt.
+  const actions = el('div', {
+    class: `pop-actions ${tpl.pattern === 'wrongSide' ? 'is-swapped' : ''}`,
+  },
+  ...tpl.buttons.map((b) => el('button', {
+    class: `pop-btn ${b.emphasis || ''}`,
+    type: 'button', text: L(b.label),
+    onclick: () => (b.role === 'malicious' ? hit(node, tpl) : close(node, tpl, b.role)),
+  })));
+  if (tpl.pattern === 'wrongSide') state.traps.add('wrongSide');
+  if (tpl.pattern === 'disguised') state.traps.add('disguised');
   body.append(actions);
 
   node.append(el('div', { class: 'pop-bar' },
@@ -233,6 +250,15 @@ function close(node, tpl, role) {
     state.traps.add('hydra');
     spawn();
     spawn();
+  }
+  if (tpl.pattern === 'nagging') {
+    // Weggeklickt heißt hier nicht weg: nach ein paar Sekunden ist es zurück.
+    state.traps.add('nagging');
+    const id = setTimeout(() => {
+      state.pending.delete(id);
+      if (state.running) spawn(tpl);
+    }, 3200);
+    state.pending.add(id);
   }
 }
 
@@ -272,6 +298,8 @@ function end(kind) {
   state.running = false;
   clearTimeout(state.spawnTimer);
   clearInterval(state.tickTimer);
+  state.pending.forEach(clearTimeout);
+  state.pending.clear();
   audio.stopPad();
   audio.sfx[kind === 'survived' ? 'success' : 'glitch']();
 
@@ -325,6 +353,8 @@ onLangChange(() => {
     state.running = false;
     clearTimeout(state.spawnTimer);
     clearInterval(state.tickTimer);
+    state.pending.forEach(clearTimeout);
+    state.pending.clear();
     audio.stopPad();
   }
   showIntro();

@@ -120,6 +120,36 @@
 :root[data-motion="reduced"] .pop.jitter { animation: none; }
 @media (prefers-reduced-motion: reduce) { .pop.jitter { animation: none; } }
 
+/* Erfundener Prüfbalken */
+.pop-scan {
+  height: 6px; border-radius: 999px; overflow: hidden;
+  background: var(--surface-3); border: 1px solid var(--border);
+}
+.pop-scan > span {
+  display: block; height: 100%; width: 30%;
+  background: var(--danger); border-radius: 999px;
+  animation: scan 2.4s ease-in-out infinite;
+}
+@keyframes scan {
+  0% { width: 8%; }
+  70% { width: 92%; }
+  100% { width: 97%; }
+}
+:root[data-motion="reduced"] .pop-scan > span { animation: none; width: 70%; }
+@media (prefers-reduced-motion: reduce) { .pop-scan > span { animation: none; width: 70%; } }
+
+/* Vertauschte Knöpfe: optisch gedreht, in der Vorlesereihenfolge unverändert */
+.pop-actions.is-swapped { flex-direction: row-reverse; }
+
+/* Als Systemmeldung getarnte Fenster wirken bewusst nüchterner */
+.pop.kind-system { border-color: var(--border-strong); }
+.pop.kind-system .pop-bar {
+  background: var(--surface-2);
+  font-family: var(--mono); font-size: .68rem; font-weight: 600;
+  color: var(--muted);
+}
+.pop.kind-system .pop-body h4 { font-size: .88rem; }
+
 /* ---------- Auswertung ---------- */
 .trap-list { display: grid; gap: .5rem; list-style: none; padding: 0; margin: 0; text-align: left; }
 .trap-list li {

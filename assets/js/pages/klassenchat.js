@@ -28,8 +28,11 @@ let courageMeter = null;
 let miaMeter = null;
 let timerHandle = null;
 
-/** Zivilcourage läuft roh von etwa -14 bis +18; für die Anzeige auf 0–100. */
-const couragePct = (v) => Math.round(((v + 14) / 32) * 100);
+/** Zivilcourage läuft roh von -16 bis +29; für die Anzeige auf 0–100 gestreckt. */
+const COURAGE_MIN = -16;
+const COURAGE_MAX = 29;
+const couragePct = (v) => Math.round(
+  ((Math.max(COURAGE_MIN, Math.min(COURAGE_MAX, v)) - COURAGE_MIN) / (COURAGE_MAX - COURAGE_MIN)) * 100);
 const miaPct = (v) => Math.max(0, Math.min(100, v));
 
 /* ============================================================

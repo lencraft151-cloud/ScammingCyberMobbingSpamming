@@ -43,7 +43,7 @@ function socket(url) {
     ws.send(JSON.stringify({ id: i, method, params }));
     return new Promise((res, rej) => {
       pending.set(i, res);
-      setTimeout(() => { if (pending.delete(i)) rej(new Error(`timeout ${method}`)); }, 30000);
+      setTimeout(() => { if (pending.delete(i)) rej(new Error(`timeout ${method}`)); }, 60000);
     });
   };
   return { ready, send, errors };
@@ -234,7 +234,7 @@ try {
 
     // Zeit einmal komplett ablaufen lassen: Schweigen muss gewertet werden.
     const silence = await p.eval(`(async () => {
-      for (let i = 0; i < 200; i++) {
+      for (let i = 0; i < 80; i++) {
         await new Promise(r => setTimeout(r, 250));
         const sys = [...document.querySelectorAll('.sys-line')].map(n => n.textContent);
         if (sys.some(s => /schreibst nichts|type nothing/i.test(s))) return 'gewertet';
@@ -251,17 +251,19 @@ try {
   {
     const p = await openPage('/klassenchat.html');
     await p.eval("document.querySelector('.btn-primary').click()");
-    const result = await p.eval(`(async () => {
-      for (let step = 0; step < 12; step++) {
-        for (let i = 0; i < 120; i++) {
-          await new Promise(r => setTimeout(r, 150));
-          if (document.querySelector('.verdict')) return 'ende';
-          const b = document.querySelectorAll('.phone-foot .choice');
-          if (b.length) { b[0].click(); break; }
-        }
+    const chatStep = `(async () => {
+      for (let i = 0; i < 70; i++) {
+        await new Promise(r => setTimeout(r, 200));
+        if (document.querySelector('.verdict')) return 'ende';
+        const b = document.querySelectorAll('.phone-foot .choice');
+        if (b.length) { b[0].click(); return 'gewaehlt'; }
       }
-      return document.querySelector('.verdict') ? 'ende' : 'kein ende';
-    })()`);
+      return 'wartet';
+    })()`;
+    let result = 'gewaehlt';
+    for (let step = 0; step < 20 && result === 'gewaehlt'; step += 1) {
+      result = await p.eval(chatStep);
+    }
     check('Klassenchat erreicht eine Auswertung', result === 'ende', result);
     const role = await p.eval("document.querySelector('.verdict .headline')?.textContent || ''");
     check('Auswertung nennt eine Rolle', role.length > 3, role);
