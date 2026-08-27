@@ -1,0 +1,45 @@
+name: Checks
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: JavaScript-Syntax
+        run: ./tools/syntax-check.sh
+
+      - name: Inhalte prüfen (Sackgassen, fehlende Übersetzungen)
+        run: node tools/validate-content.mjs
+
+      # Der Ubuntu-Runner bringt Google Chrome bereits mit — die Prüfskripte
+      # sprechen das DevTools-Protokoll direkt an und brauchen kein Paket.
+      - name: Browser finden
+        run: |
+          BIN="$(command -v google-chrome || command -v google-chrome-stable \
+                 || command -v chromium-browser || command -v chromium)"
+          if [ -z "$BIN" ]; then echo "Kein Chrome auf dem Runner gefunden." >&2; exit 1; fi
+          echo "CHROME_BIN=$BIN" >> "$GITHUB_ENV"
+          "$BIN" --version
+
+      - name: Seiten laden und Modi durchspielen
+        run: |
+          python3 -m http.server 8000 --bind 127.0.0.1 &
+          SERVER=$!
+          trap 'kill $SERVER 2>/dev/null || true' EXIT
+          for i in $(seq 1 40); do
+            curl -sf http://127.0.0.1:8000/index.html >/dev/null && break
+            sleep 0.5
+          done
+          node tools/smoke-test.mjs
+          node tools/play-test.mjs

@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="de" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Credits & Hilfe — Durchschaut!</title>
+<meta name="description" content="Woher die Inhalte kommen, wie der Ton entsteht, wo es echte Hilfe gibt - und unter welcher Lizenz das Projekt steht.">
+<meta name="color-scheme" content="dark light">
+<link rel="stylesheet" href="./assets/css/base.css">
+<link rel="stylesheet" href="./assets/css/credits.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='52' font-size='52'>🕵️</text></svg>">
+<script>
+/* Gespeicherte Darstellung setzen, bevor die Seite gezeichnet wird. */
+try{var s=JSON.parse(localStorage.getItem('durchschaut.v1')||'{}');
+if(s.theme)document.documentElement.dataset.theme=s.theme;
+if(s.motion)document.documentElement.dataset.motion=s.motion;
+if(s.lang)document.documentElement.lang=s.lang;}catch(e){}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">Zum Hauptinhalt springen</a>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="./index.html"><span class="dot" aria-hidden="true"></span>Durchschaut!</a>
+    <nav class="nav" aria-label="Hauptnavigation">
+      <a href="./index.html"       data-page="home"    data-i18n="nav.home">Start</a>
+      <a href="./scam.html"        data-page="scam"    data-i18n="nav.scam">Scam-Storys</a>
+      <a href="./klassenchat.html" data-page="chat"    data-i18n="nav.chat">Klassenchat</a>
+      <a href="./spam.html"        data-page="spam"    data-i18n="nav.spam">Spam-Flut</a>
+      <a href="./maschen.html"     data-page="tactics" data-i18n="nav.tactics">Maschen &amp; Begriffe</a>
+      <a href="./credits.html"     data-page="credits" data-i18n="nav.credits">Credits</a>
+    </nav>
+    <button class="btn btn-icon btn-ghost settings-btn" type="button" data-open-settings
+            data-i18n-attr="aria-label:nav.settings; title:nav.settings">⚙</button>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap stack" style="--gap:2rem;max-width:760px">
+
+  <h1 data-i18n="credits.title">Credits &amp; Hilfe</h1>
+
+  <!-- ---------- Abspann ---------- -->
+  <section class="stack" style="--gap:.55rem">
+    <div class="roll-stage" id="rollStage" role="region"
+         data-i18n-attr="aria-label:credits.rollLabel">
+      <div class="roll-track" id="rollTrack"></div>
+    </div>
+    <div class="roll-progress"><span id="rollBar"></span></div>
+    <div class="roll-controls" id="rollControls"></div>
+    <p style="margin:0;font-size:.8rem;color:var(--muted)" data-i18n="credits.rollHint"></p>
+  </section>
+
+  <h2 style="margin:1rem 0 0" data-i18n="credits.readAll">Alles zum Nachlesen</h2>
+
+  <!-- ---------- Worum es geht ---------- -->
+  <section class="card">
+    <div data-lang="de">
+      <h2>Worum es hier geht</h2>
+      <p><strong>Durchschaut!</strong> ist ein Lernspiel zu drei Dingen, die im Netz jeden Tag
+      passieren: Betrug, Mobbing und Spam. Statt einer Liste mit Warnungen bekommst du die
+      Situationen selbst — und triffst die Entscheidungen, die man im echten Moment treffen muss:
+      schnell, unter Druck, ohne zu wissen, wie es ausgeht.</p>
+      <p>Das Ziel ist nicht, sich schlecht zu fühlen, wenn man hereinfällt. Diese Maschen sind
+      darauf gebaut, zu funktionieren — bei klugen Menschen genauso wie bei allen anderen. Wer
+      einmal gesehen hat, wie sie von innen aussehen, erkennt sie beim nächsten Mal früher.</p>
+    </div>
+    <div data-lang="en" hidden>
+      <h2>What this is</h2>
+      <p><strong>Durchschaut!</strong> (German for “seen through it”) is a learning game about three
+      things that happen online every day: fraud, bullying and spam. Instead of a list of warnings
+      you get the situations themselves — and make the decisions you would have to make for real:
+      quickly, under pressure, without knowing how it ends.</p>
+      <p>The point is not to feel bad for falling for something. These cons are engineered to work,
+      on clever people as much as anyone else. Once you have seen how one looks from the inside,
+      you spot the next one sooner.</p>
+    </div>
+  </section>
+
+  <!-- ---------- Wichtiger Hinweis ---------- -->
+  <section>
+    <div class="note note-warn">
+      <div data-lang="de">
+        <strong>Alles hier ist erfunden.</strong>
+        <p style="margin:.4rem 0 0">Sämtliche Namen, Telefonnummern, Adressen, Firmen, Konten und
+        Nachrichten in diesem Spiel sind frei erfunden. Ähnlichkeiten mit echten Personen oder
+        Unternehmen sind nicht beabsichtigt. Genannte Marken dienen nur dazu, eine realistische
+        Situation nachzustellen — sie haben mit diesem Projekt nichts zu tun und sind an keiner
+        der gezeigten Maschen beteiligt.</p>
+      </div>
+      <div data-lang="en" hidden>
+        <strong>Everything here is invented.</strong>
+        <p style="margin:.4rem 0 0">Every name, phone number, address, company, account and message
+        in this game is fictional. Any resemblance to real people or businesses is unintended.
+        Brands are named only to make a situation feel realistic — they have nothing to do with
+        this project and are not involved in any of the cons shown.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- Technik ---------- -->
+  <section class="card">
+    <div data-lang="de">
+      <h2>Technik</h2>
+      <ul style="padding-left:1.15rem;display:grid;gap:.45rem">
+        <li>Reines HTML, CSS und JavaScript. <strong>Kein Framework, kein Build-Schritt,
+        keine Abhängigkeiten.</strong></li>
+        <li><strong>Keine externen Anfragen.</strong> Die Seite lädt nichts von fremden Servern —
+        keine Schriften, keine Skripte, keine Bilder.</li>
+        <li><strong>Kein Tracking, keine Cookies, keine Analyse.</strong> Dein Fortschritt liegt im
+        <code>localStorage</code> deines Browsers und verlässt dein Gerät nie. In den Einstellungen
+        kannst du ihn jederzeit löschen.</li>
+        <li>Eingaben in den nachgebauten Log-in-Formularen werden weder gespeichert noch gesendet.
+        Sie existieren nur im Arbeitsspeicher, bis das Fenster weitergeht.</li>
+        <li>Schriften: die vorinstallierten Systemschriften deines Geräts.</li>
+        <li>Gehostet auf GitHub Pages als statische Seite.</li>
+      </ul>
+    </div>
+    <div data-lang="en" hidden>
+      <h2>How it is built</h2>
+      <ul style="padding-left:1.15rem;display:grid;gap:.45rem">
+        <li>Plain HTML, CSS and JavaScript. <strong>No framework, no build step,
+        no dependencies.</strong></li>
+        <li><strong>No external requests.</strong> The page loads nothing from anyone else’s
+        server — no fonts, no scripts, no images.</li>
+        <li><strong>No tracking, no cookies, no analytics.</strong> Your progress lives in your
+        browser’s <code>localStorage</code> and never leaves your device. You can clear it at any
+        time in the settings.</li>
+        <li>Anything typed into the mock login forms is neither stored nor sent. It exists in
+        memory only, until the scene moves on.</li>
+        <li>Fonts: whatever system fonts your device already has.</li>
+        <li>Hosted on GitHub Pages as a static site.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ---------- Ton ---------- -->
+  <section class="card">
+    <div data-lang="de">
+      <h2>Ton</h2>
+      <p>Jedes Geräusch in diesem Spiel wird <strong>live im Browser erzeugt</strong> — mit der
+      Web Audio API aus Oszillatoren, Filtern und Rauschen. Es gibt keine einzige Audiodatei im
+      Projekt: nichts nachzuladen, nichts zu lizenzieren, keine fremden Samples.</p>
+      <p>Das umfasst die Nachrichtentöne, das Tippen, die Popup-Signale, den Alarm am Ende einer
+      Scam-Story und den tiefen Flächenklang, der im Hintergrund läuft, wenn es eng wird. Alles
+      lässt sich in den Einstellungen abschalten oder leiser stellen.</p>
+    </div>
+    <div data-lang="en" hidden>
+      <h2>Sound</h2>
+      <p>Every sound in this game is <strong>generated live in your browser</strong> — built from
+      oscillators, filters and noise through the Web Audio API. There is not a single audio file in
+      the project: nothing to download, nothing to license, no third-party samples.</p>
+      <p>That covers the message tones, the typing, the pop-up alerts, the alarm at the end of a
+      scam story and the low pad that runs underneath when things get tense. All of it can be muted
+      or turned down in the settings.</p>
+    </div>
+  </section>
+
+  <!-- ---------- Hilfe ---------- -->
+  <section class="card">
+    <div data-lang="de">
+      <h2>Wo es echte Hilfe gibt</h2>
+      <h3 style="font-size:.98rem;margin-top:1rem">Bei Mobbing und wenn es dir schlecht geht</h3>
+      <ul style="padding-left:1.15rem;display:grid;gap:.4rem">
+        <li><strong>Nummer gegen Kummer — 116 111.</strong> Kostenlos und anonym, Mo–Sa 14–20 Uhr.
+        Für Eltern: 0800 111 0 550.</li>
+        <li><strong>juuuport.de</strong> — Beratung von geschulten Jugendlichen, per Nachricht.</li>
+        <li><strong>klicksafe.de</strong> — Material für Betroffene, Eltern und Lehrkräfte.</li>
+        <li><strong>Telefonseelsorge — 0800 111 0 111.</strong> Rund um die Uhr.</li>
+      </ul>
+      <h3 style="font-size:.98rem;margin-top:1.2rem">Bei Betrug</h3>
+      <ul style="padding-left:1.15rem;display:grid;gap:.4rem">
+        <li><strong>Verbraucherzentrale</strong> — Beratung zu Fake-Shops, Abo-Fallen und
+        untergeschobenen Verträgen; dazu ein laufend aktualisierter Phishing-Radar.</li>
+        <li><strong>Polizei</strong> — Anzeige online über die Internetwache deines Bundeslandes
+        oder auf jeder Wache. <strong>Notruf 110.</strong></li>
+        <li><strong>Karten sperren — 116 116.</strong> Sperr-Notruf für Bank- und Kreditkarten,
+        rund um die Uhr.</li>
+        <li><strong>BSI</strong> — Bundesamt für Sicherheit in der Informationstechnik, mit
+        verständlichen Anleitungen für Privatleute.</li>
+      </ul>
+      <p style="margin-top:1rem"><strong>Und das Wichtigste:</strong> Wenn dich etwas davon
+      erwischt hat, ist Reden der erste Schritt. Scham ist das, worauf die Täter setzen — sie ist
+      der Grund, warum die meisten Fälle nie gemeldet werden.</p>
+    </div>
+    <div data-lang="en" hidden>
+      <h2>Where to get real help</h2>
+      <h3 style="font-size:.98rem;margin-top:1rem">Bullying, or if you are struggling</h3>
+      <ul style="padding-left:1.15rem;display:grid;gap:.4rem">
+        <li><strong>UK — Childline: 0800 1111.</strong> Free and confidential, any time.</li>
+        <li><strong>Germany — Nummer gegen Kummer: 116 111.</strong> Free and anonymous.
+        For parents: 0800 111 0 550.</li>
+        <li><strong>116 111</strong> is the child helpline number across most of the EU.</li>
+        <li><strong>juuuport.de</strong> — advice from trained young people, by message (German).</li>
+      </ul>
+      <h3 style="font-size:.98rem;margin-top:1.2rem">Fraud</h3>
+      <ul style="padding-left:1.15rem;display:grid;gap:.4rem">
+        <li><strong>UK — Action Fraud</strong> for reporting; forward suspicious texts to
+        <strong>7726</strong> and phishing emails to <strong>report@phishing.gov.uk</strong>.</li>
+        <li><strong>Germany — Verbraucherzentrale</strong> for fake shops and slipped-in contracts;
+        police reports via each state’s online station, emergency number <strong>110</strong>.</li>
+        <li><strong>Blocking cards in Germany — 116 116</strong>, around the clock.</li>
+        <li>Contact your bank immediately on any suspected card or transfer fraud. Speed decides
+        how much can be recovered.</li>
+      </ul>
+      <p style="margin-top:1rem"><strong>And the most important part:</strong> if something here has
+      happened to you, talking about it is the first step. Shame is what the offenders rely on — it
+      is the reason most cases are never reported at all.</p>
+    </div>
+  </section>
+
+  <!-- ---------- Lizenz ---------- -->
+  <section class="card">
+    <div data-lang="de">
+      <h2>Lizenz und Mitwirkende</h2>
+      <p><strong>Code:</strong> MIT-Lizenz — frei nutzbar, auch im Unterricht und in eigenen
+      Projekten.<br>
+      <strong>Texte und Szenarien:</strong> CC BY 4.0 — verwenden und verändern erlaubt, solange
+      die Quelle genannt wird.</p>
+      <p><strong>Idee, Inhalte und Umsetzung:</strong> lencraft151-cloud.<br>
+      <strong>Entwickelt mit:</strong> Claude Code.</p>
+      <p style="margin-bottom:0">Der Quelltext liegt offen auf GitHub. Fehler, fehlende Maschen
+      oder unklare Formulierungen sind als Issue jederzeit willkommen.</p>
+    </div>
+    <div data-lang="en" hidden>
+      <h2>Licence and credits</h2>
+      <p><strong>Code:</strong> MIT licence — free to use, including in classrooms and your own
+      projects.<br>
+      <strong>Text and scenarios:</strong> CC BY 4.0 — use and adapt freely, as long as you credit
+      the source.</p>
+      <p><strong>Concept, content and build:</strong> lencraft151-cloud.<br>
+      <strong>Developed with:</strong> Claude Code.</p>
+      <p style="margin-bottom:0">The source is public on GitHub. Bugs, missing cons and confusing
+      wording are all welcome as issues.</p>
+    </div>
+  </section>
+
+</div>
+</main>
+<footer class="site-footer">
+  <div class="wrap bar">
+    <span>Durchschaut! — <span data-i18n="brand.tagline">Erkennst du die Masche?</span></span>
+    <span style="margin-left:auto"><a href="./credits.html" data-i18n="nav.credits">Credits</a></span>
+  </div>
+</footer>
+
+<script type="module" src="./assets/js/pages/credits.js"></script>
+</body>
+</html>
