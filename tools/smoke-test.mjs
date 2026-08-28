@@ -147,13 +147,33 @@ try {
     });
     await delay(page.settle ?? 1200);
 
-    // Prüfen, dass tatsächlich etwas gerendert wurde.
+    // Prüfen, dass wirklich unsere Seite dasteht.
+    //
+    // „Text vorhanden und keine Konsolenfehler" genügt nicht: Chromes eigene
+    // Fehlerseite („Diese Seite ist nicht erreichbar") bringt über 150 Zeichen
+    // Text mit und führt kein Skript aus, erzeugt also auch keine Fehler.
+    // Gegen ein unerreichbares Deployment wäre der Test damit blind.
     const { result } = await cdp.send('Runtime.evaluate', {
-      expression: 'document.body.innerText.trim().length',
+      expression: `JSON.stringify({
+        url: location.href,
+        chars: document.body.innerText.trim().length,
+        title: document.title,
+        // Jede Seite des Projekts trägt Kopfzeile und Fußzeile.
+        chrome: !!document.querySelector('.site-header .brand')
+              && !!document.querySelector('.site-footer'),
+      })`,
       returnByValue: true,
     });
-    if (!result.value || result.value < 60) {
-      problems.push(`Seite wirkt leer (nur ${result.value} Zeichen Text)`);
+    const page_ = JSON.parse(result.value);
+
+    if (/^chrome-error:|^about:blank$/.test(page_.url)) {
+      problems.push(`Seite nicht geladen — Browser steht auf ${page_.url}`);
+    } else if (!page_.chrome) {
+      problems.push('Kopf- oder Fußzeile fehlt — das ist nicht unsere Seite');
+    } else if (!/Durchschaut/.test(page_.title)) {
+      problems.push(`unerwarteter Titel: "${page_.title}"`);
+    } else if (page_.chars < 60) {
+      problems.push(`Seite wirkt leer (nur ${page_.chars} Zeichen Text)`);
     }
 
     if (SHOT_DIR) {

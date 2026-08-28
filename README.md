@@ -14,12 +14,12 @@ A bilingual (German/English) learning game about **scams**, **cyberbullying** an
 
 | Modus | Was passiert |
 |-------|--------------|
-| 🎣 **Scam-Storys** | Acht verzweigte Geschichten aus SMS, WhatsApp, Instagram, Discord, E-Mail und am Telefon — zehn Geschichten mit über 160 Szenen, jede mit einer echten Ausgangslage und mehreren Enden. Am Ende steht klar da, ob du gescammt wurdest: mit Schadenshöhe, allen Warnsignalen, die in den Nachrichten steckten, einem Rückblick auf jede Entscheidung und den Hebeln, die gegen dich eingesetzt wurden. |
+| 🎣 **Scam-Storys** | Zehn verzweigte Geschichten mit 147 Szenen — aus SMS, WhatsApp, Instagram, Discord, E-Mail und am Telefon, jede mit einer echten Ausgangslage und mehreren Enden. Am Ende steht klar da, ob du gescammt wurdest: mit Schadenshöhe, allen Warnsignalen, die in den Nachrichten steckten, einem Rückblick auf jede Entscheidung und den Hebeln, die gegen dich eingesetzt wurden. |
 | 💬 **Cybermobbing im Klassenchat** | Ein Gruppenchat kippt gegen eine Mitschülerin. Nachrichten laufen in Echtzeit ein, Entscheidungen stehen unter Zeitdruck. Läuft die Zeit ab, zählt das als Schweigen — und Schweigen wird am Ende auch so benannt. |
 | 🧠 **Maschen & Begriffe** | Die zwölf psychologischen Hebel hinter allen Maschen, die Zwei-Minuten-Prüfung mit sechs Fragen für jede verdächtige Nachricht, 24 Begriffe von Smishing bis Catfishing und sechs Regeln, die fast alles abdecken. |
 | 🌊 **Spam-Flut** | 90 Sekunden Dauerbeschuss mit dreizehn Fenstertypen und zehn echten Dark Patterns: falsche Schließkreuze, flüchtende X, Hydra-Fenster, vertauschte Knöpfe, getarnte Systemmeldungen, Fenster, die wiederkommen. Danach wird jeder Trick erklärt, der gezogen hat. |
 
-Dazu: acht Scam-Szenarien decken bewusst beide Zielgruppen ab — Jugendliche
+Dazu: die zehn Scam-Szenarien decken bewusst beide Zielgruppen ab — Jugendliche
 (Gaming-Skins, Fake-Shop, Klassenchat) und Erwachsene (Bank-Support, Enkeltrick,
 Krypto-Anlagebetrug).
 
@@ -84,16 +84,30 @@ kein npm-Paket. Beide erwarten einen laufenden Webserver auf Port 8000;
 `--shots <verzeichnis>` legt zusätzlich Screenshots ab. Alle vier Prüfungen laufen
 bei jedem Push über [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
+`SMOKE_BASE` setzt eine andere Basis-Adresse — damit lässt sich auch die
+veröffentlichte Seite im Browser prüfen statt nur die lokale Kopie:
+
+```bash
+SMOKE_BASE=https://lencraft151-cloud.github.io/ScammingCyberMobbingSpamming \
+  node tools/smoke-test.mjs
+```
+
+Der Smoke-Test prüft dabei zuerst, ob überhaupt *diese* Seite dasteht: Chromes
+eigene Fehlerseite bringt reichlich Text mit und führt kein Skript aus, würde
+also an „Text vorhanden, keine Konsolenfehler" vorbeirutschen. Erst wenn Adresse,
+Titel, Kopf- und Fußzeile stimmen, zählt der Rest.
+
 ## Aufbau
 
 ```
 index.html  scam.html  klassenchat.html  spam.html  maschen.html  credits.html
 
-assets/css/   base.css (Tokens, Layout)  chat.css (Chat)  spam.css (Popups)
+assets/css/   base.css (Tokens, Layout)  chat.css (Chat)
+              spam.css (Popups)          credits.css (Abspann)
 assets/js/    engine.js   Erzählmaschine + Inhaltsprüfung
               i18n.js     Sprachumschaltung        audio.js  Klangerzeugung
               ui.js       Chat, Anzeigen, Fenster  storage.js  Fortschritt
-assets/js/data/scams/     die acht Geschichten, eine Datei je Story
+assets/js/data/scams/     die zehn Geschichten, eine Datei je Story
 assets/js/data/           klassenchat.js  spam.js
                           tactics.js   die zwölf Hebel
                           glossary.js  Begriffe und Regeln
