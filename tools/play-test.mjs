@@ -27,8 +27,12 @@ function socket(url) {
   let id = 0;
   const pending = new Map();
   const errors = [];
+  const handlers = new Map();
   ws.addEventListener('message', (e) => {
     const m = JSON.parse(e.data);
+    if (m.method && handlers.has(m.method)) {
+      handlers.get(m.method).forEach((fn) => fn(m.params));
+    }
     if (m.id != null && pending.has(m.id)) { pending.get(m.id)(m.result); pending.delete(m.id); }
     if (m.method === 'Runtime.exceptionThrown') {
       errors.push(m.params.exceptionDetails?.exception?.description || m.params.exceptionDetails?.text);
@@ -46,7 +50,11 @@ function socket(url) {
       setTimeout(() => { if (pending.delete(i)) rej(new Error(`timeout ${method}`)); }, 60000);
     });
   };
-  return { ready, send, errors };
+  const on = (method, fn) => {
+    if (!handlers.has(method)) handlers.set(method, []);
+    handlers.get(method).push(fn);
+  };
+  return { ready, send, errors, on };
 }
 
 let browser;
@@ -65,8 +73,17 @@ async function openPage(url) {
   await page.ready;
   await page.send('Runtime.enable');
   await page.send('Page.enable');
+
+  // Auf das Load-Event warten statt pauschal zu schlafen: über echtes Netz
+  // dauert der erste Abruf länger, und eine Abfrage auf dem noch offenen
+  // about:blank scheitert an der Zugriffssperre für localStorage.
+  const loaded = new Promise((resolve) => {
+    page.on('Page.loadEventFired', resolve);
+    setTimeout(resolve, 30000);
+  });
   await page.send('Page.navigate', { url: BASE + url });
-  await delay(1500);
+  await loaded;
+  await delay(700);
   page.targetId = targetId;
   page.eval = async (expression) => {
     const { result, exceptionDetails } = await page.send('Runtime.evaluate', {
